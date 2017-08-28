@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 
 
 ---- MODEL ----
@@ -14,7 +15,9 @@ type alias Model =
 
 
 type alias User =
-    { displayName : String
+    { id : Int
+    , avatar : String
+    , displayName : String
     , feelCount : Int
     , feelsExperienced : List Feel
     , ideaCount : Int
@@ -24,15 +27,18 @@ type alias User =
 
 
 type alias Feel =
-    { emoji : String
+    { id : Int
+    , emoji : String
+    , feltCount : Int
     , ideas : List Idea
     , name : String
     }
 
 
 type alias Idea =
-    { description : String
-    , votes : Int
+    { id : Int
+    , description : String
+    , voteCount : Int
     }
 
 
@@ -43,9 +49,34 @@ initialModel =
     }
 
 
+sampleFeelData : List Feel
+sampleFeelData =
+    [ { id = 1
+      , emoji = feelEmoji Tired
+      , feltCount = 0
+      , ideas = sampleIdeaData
+      , name = "Tired"
+      }
+    , { id = 100
+      , emoji = feelEmoji Angry
+      , feltCount = 10
+      , ideas = sampleIdeaData
+      , name = "Angry"
+      }
+    , { id = 999
+      , emoji = feelEmoji Confused
+      , feltCount = 999
+      , ideas = sampleIdeaData
+      , name = "Confused"
+      }
+    ]
+
+
 sampleUserData : List User
 sampleUserData =
-    [ { displayName = "Bijan"
+    [ { id = 1
+      , avatar = ""
+      , displayName = "Bijan"
       , feelCount = 1
       , feelsExperienced = []
       , ideaCount = 1
@@ -55,19 +86,15 @@ sampleUserData =
     ]
 
 
-sampleFeelData : List Feel
-sampleFeelData =
-    [ { emoji = feelEmoji Tired
-      , ideas = []
-      , name = "Tired"
+sampleIdeaData : List Idea
+sampleIdeaData =
+    [ { id = 1
+      , description = "Take a walk."
+      , voteCount = 1
       }
-    , { emoji = feelEmoji Worried
-      , ideas = []
-      , name = "Worried"
-      }
-    , { emoji = feelEmoji Unmotivated
-      , ideas = []
-      , name = "Unmotivated"
+    , { id = 2
+      , description = "Delete all your code."
+      , voteCount = 10
       }
     ]
 
@@ -136,11 +163,30 @@ init =
 
 type Msg
     = NoOp
+    | ExperienceFeel Feel
+    | RemoveFeelFromExperiencedness Feel
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        ExperienceFeel feel ->
+            let
+                newFeels =
+                    model.feels
+                        |> List.map
+                            (\currentFeel ->
+                                if currentFeel.id == feel.id then
+                                    { feel | feltCount = feel.feltCount + 1 }
+                                else
+                                    currentFeel
+                            )
+            in
+                ( { model | feels = newFeels }, Cmd.none )
+
+        RemoveFeelFromExperiencedness feel ->
+            ( model, Cmd.none )
+
         NoOp ->
             ( model, Cmd.none )
 
@@ -208,22 +254,36 @@ feelsSection model =
     div []
         [ h2 [] [ text "Feel Selector" ]
         , p [] [ text "Experiencing a feel?" ]
-        , feelsList model.feels
+        , feelsList model
         , feelButton
         ]
 
 
-feelsList : List Feel -> Html Msg
-feelsList feels =
+feelsList : Model -> Html Msg
+feelsList model =
     div []
-        (List.map feelItem feels)
+        (List.map feelItem model.feels)
 
 
 feelItem : Feel -> Html Msg
 feelItem feel =
     div []
         [ span [] [ text (feel.emoji ++ " " ++ feel.name) ]
+        , button [ onClick <| ExperienceFeel feel ]
+            [ text "I have indeed experienced this feel." ]
+        , span [] [ text <| toString feel.feltCount ]
+        , feelIdeas feel.ideas
         ]
+
+
+feelIdeas : List Idea -> Html Msg
+feelIdeas ideas =
+    ul [] (List.map feelIdeaItem ideas)
+
+
+feelIdeaItem : Idea -> Html Msg
+feelIdeaItem idea =
+    p [] [ text idea.description ]
 
 
 feelButton : Html Msg
