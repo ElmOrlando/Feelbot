@@ -54,20 +54,35 @@ sampleFeelData =
     [ { id = 1
       , emoji = feelEmoji Tired
       , feltCount = 0
-      , ideas = sampleIdeaData
+      , ideas =
+            [ { id = 1
+              , description = "Take a walk."
+              , voteCount = 1
+              }
+            ]
       , name = "Tired"
       }
     , { id = 100
       , emoji = feelEmoji Angry
       , feltCount = 10
-      , ideas = sampleIdeaData
+      , ideas =
+            [ { id = 1
+              , description = "Delete all your code."
+              , voteCount = 1
+              }
+            ]
       , name = "Angry"
       }
     , { id = 999
-      , emoji = feelEmoji Confused
+      , emoji = feelEmoji Unmotivated
       , feltCount = 999
-      , ideas = sampleIdeaData
-      , name = "Confused"
+      , ideas =
+            [ { id = 1
+              , description = "Read a book."
+              , voteCount = 1
+              }
+            ]
+      , name = "Unmotivated"
       }
     ]
 
