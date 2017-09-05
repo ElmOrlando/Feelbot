@@ -9,3 +9,7 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias Feelbot.Accounts
+
+Accounts.create_user(%{username: "helloworld2"})
