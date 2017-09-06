@@ -1,8 +1,8 @@
 # Feelbot
 
-![Feels Index Page](https://github.com/ElmOrlando/Feelbot/blob/master/img/feels-index-page.png?raw=true)
+![Feels Index Page](https://github.com/ElmOrlando/Feelbot/blob/master/assets/static/images/feels-index-page.png?raw=true)
 
-![Feels Show Page](https://github.com/ElmOrlando/Feelbot/blob/master/img/feels-show-page.png?raw=true)
+![Feels Show Page](https://github.com/ElmOrlando/Feelbot/blob/master/assets/static/images/feels-show-page.png?raw=true)
 
 Feelbot is here to help.
 
