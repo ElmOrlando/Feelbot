@@ -35,6 +35,10 @@ help when it's needed.
   [Phoenix](http://www.phoenixframework.org/) framework.
 - **Styles:** Feel free to add CSS to the `assets/css/app.css` file to help out
   with styling.
+- **Art:** Want to contribute assets for Feelbot?
+- **Ops:** This app is currently deployed to Heroku at
+  `https://feelbot-app.herokuapp.com`. If you'd like to learn more about
+  deploys or want to help out then let us know!
 
 ## What Can I Help With?
 
