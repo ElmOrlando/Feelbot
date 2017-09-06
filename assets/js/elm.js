@@ -12558,7 +12558,7 @@ var _user$project$Main$feelIdeas = function (ideas) {
 		{ctor: '[]'},
 		A2(_elm_lang$core$List$map, _user$project$Main$feelIdeaItem, ideas));
 };
-var _user$project$Main$introText = '\n    Feelbot is here to help.\n\n    Feelbot is like Stack Overflow for developer feelings. It\'s a list of\n    common emotions that developers naturally tend to experience while engaging\n    in the practice of programming.\n\n    Each \"feel\" has a set of user-generated \"ideas\" associated with it. These\n    ideas could be voted up so that particularly relevant or strong ideas\n    appear at the top.\n\n    Example: A developer clicks the \"Overwhelmed\" feel, and the top ideas might\n    be something along the lines of \"Take a walk\", \"Drink some water\", or\n    \"Review your calendar and reduce commitments.\"\n    ';
+var _user$project$Main$introText = '\n    Feelbot is here to help.\n\n    Feelbot is like Stack Overflow for developer feelings. It\'s a simple list of\n    common emotions that developers naturally tend to experience along with ideas\n    and suggestions for constructively working with those emotions.\n\n    Each \"feel\" has a set of user-generated \"ideas\" associated with it. These\n    suggestions can be voted up or down so that particularly relevant or strong\n    ideas appear at the top.\n    ';
 var _user$project$Main$header = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
