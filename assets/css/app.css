@@ -2,12 +2,50 @@
 .logo {
   display: block;
   height: 150px;
-  margin: 30px auto;
+  margin: 30px auto 0 auto;
 }
 
 .tagline {
   font-size: 2em;
   font-style: italic;
+  text-align: center;
+}
+
+/* Intro */
+.intro {
+  margin: 30px 80px;
+}
+
+/* Feels */
+.feel-link {
+  text-decoration: none !important;
+}
+
+.feel-item {
+  align-items: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 10px;
+  max-width: 220px;
+}
+
+.feel-emoji {
+  font-size: 8em;
+  margin: 0;
+}
+
+.feel-name {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.feel-button {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 /* Phoenix flash messages */

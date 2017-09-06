@@ -2,7 +2,6 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
 
 
 ---- MODEL ----
@@ -223,8 +222,8 @@ view : Model -> Html Msg
 view model =
     div []
         [ header model
+        , introSection model
         , feelsSection model
-        , usersSection model
         ]
 
 
@@ -237,7 +236,6 @@ header model =
     div [ class "header" ]
         [ img [ class "logo", src "https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png" ] []
         , p [ class "tagline" ] [ text tagLine ]
-        , p [] [ text introText ]
         ]
 
 
@@ -246,11 +244,21 @@ tagLine =
     "Feelbot is here to help."
 
 
+
+---- INTRO ----
+
+
+introSection : Model -> Html Msg
+introSection model =
+    div [ class "intro" ]
+        [ div [ class "alert alert-info" ] [ text alertText ]
+        , p [] [ text introText ]
+        ]
+
+
 introText : String
 introText =
     """
-    Feelbot is here to help.
-
     Feelbot is like Stack Overflow for developer feelings. It's a simple list of
     common emotions that developers naturally tend to experience along with ideas
     and suggestions for constructively working with those emotions.
@@ -261,16 +269,22 @@ introText =
     """
 
 
+alertText : String
+alertText =
+    """
+    Feelbot is currently in an early stage of development. The data from the
+    front-end isn't currently saved anywhere yet.
+    """
+
+
 
 ---- FEELS ----
 
 
 feelsSection : Model -> Html Msg
 feelsSection model =
-    div []
-        [ h2 [] [ text "Feel Selector" ]
-        , p [] [ text "Experiencing a feel?" ]
-        , feelsList model
+    div [ class "container" ]
+        [ feelsList model
         , feelButton
         ]
 
@@ -283,12 +297,11 @@ feelsList model =
 
 feelItem : Feel -> Html Msg
 feelItem feel =
-    div []
-        [ span [] [ text (feel.emoji ++ " " ++ feel.name) ]
-        , button [ onClick <| ExperienceFeel feel ]
-            [ text "I have indeed experienced this feel." ]
-        , span [] [ text <| toString feel.feltCount ]
-        , feelIdeas feel.ideas
+    a [ class "feel-link", href "#" ]
+        [ div [ class "feel-item" ]
+            [ p [ class "feel-emoji" ] [ text feel.emoji ]
+            , p [ class "feel-name" ] [ text feel.name ]
+            ]
         ]
 
 
@@ -304,9 +317,9 @@ feelIdeaItem idea =
 
 feelButton : Html Msg
 feelButton =
-    div []
-        [ p [] [ text "Want to add a feel that's not listed?" ]
-        , button [] [ text "Create a Feel" ]
+    div [ class "feel-button" ]
+        [ p [] [ text "Noticed a feel that's missing?" ]
+        , a [ class "btn btn-lg btn-success" ] [ text "Create a Feel" ]
         ]
 
 
