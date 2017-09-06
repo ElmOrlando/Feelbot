@@ -12559,20 +12559,25 @@ var _user$project$Main$feelIdeas = function (ideas) {
 		A2(_elm_lang$core$List$map, _user$project$Main$feelIdeaItem, ideas));
 };
 var _user$project$Main$introText = '\n    Feelbot is here to help.\n\n    Feelbot is like Stack Overflow for developer feelings. It\'s a simple list of\n    common emotions that developers naturally tend to experience along with ideas\n    and suggestions for constructively working with those emotions.\n\n    Each \"feel\" has a set of user-generated \"ideas\" associated with it. These\n    suggestions can be voted up or down so that particularly relevant or strong\n    ideas appear at the top.\n    ';
+var _user$project$Main$tagLine = 'Feelbot is here to help.';
 var _user$project$Main$header = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('header'),
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$img,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$src('https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png'),
+					_0: _elm_lang$html$Html_Attributes$class('logo'),
 					_1: {
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$height(60),
+						_0: _elm_lang$html$Html_Attributes$src('https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png'),
 						_1: {ctor: '[]'}
 					}
 				},
@@ -12580,11 +12585,15 @@ var _user$project$Main$header = function (model) {
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$h1,
-					{ctor: '[]'},
+					_elm_lang$html$Html$p,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Feelbot'),
+						_0: _elm_lang$html$Html_Attributes$class('tagline'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(_user$project$Main$tagLine),
 						_1: {ctor: '[]'}
 					}),
 				_1: {

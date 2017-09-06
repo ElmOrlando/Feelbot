@@ -234,11 +234,16 @@ view model =
 
 header : Model -> Html Msg
 header model =
-    div []
-        [ img [ src "https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png", height 60 ] []
-        , h1 [] [ text "Feelbot" ]
+    div [ class "header" ]
+        [ img [ class "logo", src "https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png" ] []
+        , p [ class "tagline" ] [ text tagLine ]
         , p [] [ text introText ]
         ]
+
+
+tagLine : String
+tagLine =
+    "Feelbot is here to help."
 
 
 introText : String

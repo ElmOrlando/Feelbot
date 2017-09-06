@@ -1,1 +1,14 @@
-/* This file is for your main application css. */
+/* Header */
+.logo {
+  display: block;
+  height: 150px;
+  margin: 30px auto;
+}
+
+.tagline {
+  font-size: 2em;
+  font-style: italic;
+}
+
+/* Phoenix flash messages */
+.alert:empty { display: none; }
