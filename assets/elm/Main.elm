@@ -2,15 +2,24 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Navigation
 
 
 ---- MODEL ----
 
 
 type alias Model =
-    { feels : List Feel
+    { currentPage : Page
+    , feels : List Feel
     , users : List User
     }
+
+
+type Page
+    = Home
+    | Feels
+    | Users
+    | NotFound
 
 
 type alias User =
@@ -41,9 +50,10 @@ type alias Idea =
     }
 
 
-initialModel : Model
-initialModel =
-    { feels = sampleFeelData
+initialModel : Page -> Model
+initialModel page =
+    { currentPage = Home
+    , feels = sampleFeelData
     , users = sampleUserData
     }
 
@@ -164,9 +174,9 @@ feelEmoji feel =
             "😟"
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( initialModel
+init : Navigation.Location -> ( Model, Cmd Msg )
+init location =
+    ( location |> initPage |> initialModel
     , Cmd.none
     )
 
@@ -177,6 +187,8 @@ init =
 
 type Msg
     = NoOp
+    | Navigate Page
+    | ChangePage Page
     | ExperienceFeel Feel
     | RemoveFeelFromExperiencedness Feel
 
@@ -184,6 +196,12 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        Navigate page ->
+            ( { model | currentPage = page }, pageToHash page |> Navigation.newUrl )
+
+        ChangePage page ->
+            ( { model | currentPage = page }, Cmd.none )
+
         ExperienceFeel feel ->
             let
                 newFeels =
@@ -220,10 +238,40 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
+    case model.currentPage of
+        Home ->
+            viewHome model
+
+        Feels ->
+            viewFeels model
+
+        Users ->
+            viewUsers model
+
+        _ ->
+            viewHome model
+
+
+viewHome : Model -> Html Msg
+viewHome model =
     div []
         [ header model
         , introSection model
         , feelsSection model
+        ]
+
+
+viewFeels : Model -> Html Msg
+viewFeels model =
+    div []
+        [ feelsSection model
+        ]
+
+
+viewUsers : Model -> Html Msg
+viewUsers model =
+    div []
+        [ usersSection model
         ]
 
 
@@ -365,9 +413,73 @@ userButton =
 
 main : Program Never Model Msg
 main =
-    Html.program
+    Navigation.program locationToMessage
         { view = view
         , init = init
         , update = update
         , subscriptions = subscriptions
         }
+
+
+
+---- ROUTING ----
+
+
+locationToMessage : Navigation.Location -> Msg
+locationToMessage location =
+    location.hash
+        |> hashToPage
+        |> ChangePage
+
+
+initPage : Navigation.Location -> Page
+initPage location =
+    hashToPage location.hash
+
+
+hashToPage : String -> Page
+hashToPage hash =
+    case hash of
+        "#/" ->
+            Home
+
+        "#/feels" ->
+            Feels
+
+        "#/users" ->
+            Users
+
+        _ ->
+            NotFound
+
+
+pageToHash : Page -> String
+pageToHash page =
+    case page of
+        Home ->
+            "#/"
+
+        Feels ->
+            "#/feels"
+
+        Users ->
+            "#/users"
+
+        NotFound ->
+            "#/notfound"
+
+
+pageView : Model -> Html Msg
+pageView model =
+    case model.currentPage of
+        Home ->
+            viewHome model
+
+        Feels ->
+            viewFeels model
+
+        Users ->
+            viewUsers model
+
+        _ ->
+            viewHome model
