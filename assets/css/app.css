@@ -42,7 +42,7 @@
   font-weight: bold;
 }
 
-.feel-button {
+.feel-button, .feels-index-button, .users-index-button  {
   font-size: 1.2em;
   margin-bottom: 30px;
   text-align: center;

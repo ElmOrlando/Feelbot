@@ -18,6 +18,7 @@ type alias Model =
 type Page
     = Home
     | Feels
+    | FeelsNew
     | Users
     | NotFound
 
@@ -102,7 +103,7 @@ sampleUserData =
       , avatar = ""
       , displayName = "Bijan"
       , feelCount = 1
-      , feelsExperienced = []
+      , feelsExperienced = sampleFeelData
       , ideaCount = 1
       , ideasCreated = []
       , username = "bijanbwb"
@@ -189,6 +190,7 @@ type Msg
     = NoOp
     | Navigate Page
     | ChangePage Page
+    | CreateFeel
     | ExperienceFeel Feel
     | RemoveFeelFromExperiencedness Feel
 
@@ -201,6 +203,9 @@ update msg model =
 
         ChangePage page ->
             ( { model | currentPage = page }, Cmd.none )
+
+        CreateFeel ->
+            ( model, Cmd.none )
 
         ExperienceFeel feel ->
             let
@@ -245,6 +250,9 @@ view model =
         Feels ->
             viewFeels model
 
+        FeelsNew ->
+            viewFeelsNew model
+
         Users ->
             viewUsers model
 
@@ -258,6 +266,9 @@ viewHome model =
         [ header model
         , introSection model
         , feelsSection model
+        , feelButton
+        , feelsIndexButton
+        , usersIndexButton
         ]
 
 
@@ -326,14 +337,13 @@ alertText =
 
 
 
----- FEELS ----
+---- FEELS INDEX PAGE ----
 
 
 feelsSection : Model -> Html Msg
 feelsSection model =
     div [ class "container" ]
         [ feelsList model
-        , feelButton
         ]
 
 
@@ -363,11 +373,67 @@ feelIdeaItem idea =
     p [] [ text idea.description ]
 
 
+
+---- FEELS SHOW PAGE ----
+
+
+feelShow : Feel -> Html Msg
+feelShow feel =
+    div [] []
+
+
+
+---- FEELS NEW PAGE ----
+
+
+viewFeelsNew : Model -> Html Msg
+viewFeelsNew model =
+    div [ class "new-feel container" ]
+        [ h1 [] [ text "Create a New Feel" ]
+        , Html.form []
+            [ div [ class "form-group" ]
+                [ label [ for "feel-title" ] [ text "What feel do you want to add?" ]
+                , input [ id "feel-title", class "form-control", placeholder "Scrumtralescent", type_ "text", autofocus True ] []
+                ]
+            , div [ class "form-group" ]
+                [ label [ for "feel-emoji" ] [ text "Is there an emoji that properly conveys this feel?" ]
+                , input [ id "feel-emoji", class "form-control", placeholder "😎", type_ "text" ] []
+                ]
+            ]
+        ]
+
+
+
+---- BUTTONS ----
+
+
 feelButton : Html Msg
 feelButton =
     div [ class "feel-button" ]
         [ p [] [ text "Noticed a feel that's missing?" ]
-        , a [ class "btn btn-lg btn-success" ] [ text "Create a Feel" ]
+        , a [ class "btn btn-lg btn-success", href <| "#/feels/new" ] [ text "Create a Feel" ]
+        ]
+
+
+feelsIndexButton : Html Msg
+feelsIndexButton =
+    div [ class "feels-index-button" ]
+        [ a [ class "btn btn-lg btn-info", href <| "#/feels" ] [ text "List All Feels" ]
+        ]
+
+
+usersIndexButton : Html Msg
+usersIndexButton =
+    div [ class "users-index-button" ]
+        [ a [ class "btn btn-lg btn-default", href <| "#/users" ] [ text "List Users" ]
+        ]
+
+
+userButton : Html Msg
+userButton =
+    div []
+        [ p [] [ text "Want to contribute?" ]
+        , button [] [ text "Create an Account" ]
         ]
 
 
@@ -378,7 +444,7 @@ feelButton =
 usersSection : Model -> Html Msg
 usersSection model =
     div []
-        [ h2 [] [ text "Users" ]
+        [ h2 [] [ text "Feelbot Users" ]
         , p [] [ text "Proudly experiencing emotions since 2017." ]
         , usersList model.users
         , userButton
@@ -393,18 +459,21 @@ usersList users =
 
 userItem : User -> Html Msg
 userItem user =
-    div []
-        [ p [] [ text user.displayName ]
-        , p [] [ text <| "Ideas Contributed: " ++ (toString user.ideaCount) ]
+    a [ href <| "#/users/" ++ (toString user.id) ]
+        [ div []
+            [ p [] [ text user.displayName ]
+            , p [] [ text <| "Ideas Contributed: " ++ (toString user.ideaCount) ]
+            ]
         ]
 
 
-userButton : Html Msg
-userButton =
-    div []
-        [ p [] [ text "Want to contribute?" ]
-        , button [] [ text "Create an Account" ]
-        ]
+
+---- USER SHOW ----
+
+
+userShow : User -> Html Msg
+userShow user =
+    div [] []
 
 
 
@@ -446,6 +515,9 @@ hashToPage hash =
         "#/feels" ->
             Feels
 
+        "#/feels/new" ->
+            FeelsNew
+
         "#/users" ->
             Users
 
@@ -462,6 +534,9 @@ pageToHash page =
         Feels ->
             "#/feels"
 
+        FeelsNew ->
+            "#/feels/new"
+
         Users ->
             "#/users"
 
@@ -477,6 +552,9 @@ pageView model =
 
         Feels ->
             viewFeels model
+
+        FeelsNew ->
+            viewFeelsNew model
 
         Users ->
             viewUsers model
