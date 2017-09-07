@@ -12706,6 +12706,121 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
 
+var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$html$Html_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _elm_lang$html$Html_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
+var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
+var _elm_lang$html$Html_Events$onFocus = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onBlur = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
+	_elm_lang$html$Html_Events$defaultOptions,
+	{preventDefault: true});
+var _elm_lang$html$Html_Events$onSubmit = function (msg) {
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		'submit',
+		_elm_lang$html$Html_Events$onSubmitOptions,
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onCheck = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'change',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
+};
+var _elm_lang$html$Html_Events$onInput = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
+};
+var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});
+
 var _elm_lang$navigation$Native_Navigation = function() {
 
 
@@ -13336,6 +13451,25 @@ var _user$project$Main$feelButton = A2(
 			_1: {ctor: '[]'}
 		}
 	});
+var _user$project$Main$onEnter = function (msg) {
+	var isEnter = function (code) {
+		return _elm_lang$core$Native_Utils.eq(code, 13) ? _elm_lang$core$Json_Decode$succeed(msg) : _elm_lang$core$Json_Decode$fail('not the right keycode');
+	};
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'keydown',
+		A2(_elm_lang$core$Json_Decode$andThen, isEnter, _elm_lang$html$Html_Events$keyCode));
+};
+var _user$project$Main$newFeel = F3(
+	function (id, emoji, name) {
+		return {
+			id: id,
+			emoji: emoji,
+			feltCount: 0,
+			ideas: {ctor: '[]'},
+			name: name
+		};
+	});
 var _user$project$Main$viewFeelsNew = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -13374,7 +13508,7 @@ var _user$project$Main$viewFeelsNew = function (model) {
 									_elm_lang$html$Html$label,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$for('feel-title'),
+										_0: _elm_lang$html$Html_Attributes$for('feel-name'),
 										_1: {ctor: '[]'}
 									},
 									{
@@ -13388,7 +13522,7 @@ var _user$project$Main$viewFeelsNew = function (model) {
 										_elm_lang$html$Html$input,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$id('feel-title'),
+											_0: _elm_lang$html$Html_Attributes$id('feel-name'),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$class('form-control'),
@@ -13459,7 +13593,41 @@ var _user$project$Main$viewFeelsNew = function (model) {
 										_1: {ctor: '[]'}
 									}
 								}),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$button,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('btn btn-success'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$type_('submit'),
+											_1: {ctor: '[]'}
+										}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Save'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$button,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('btn btn-default'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Cancel'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
 						}
 					}),
 				_1: {ctor: '[]'}
@@ -13748,7 +13916,15 @@ var _user$project$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'CreateFeel':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							feels: {ctor: '::', _0: _p3._0, _1: model.feels}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'ExperienceFeel':
 				var _p5 = _p3._0;
 				var newFeels = A2(
@@ -13932,7 +14108,9 @@ var _user$project$Main$RemoveFeelFromExperiencedness = function (a) {
 var _user$project$Main$ExperienceFeel = function (a) {
 	return {ctor: 'ExperienceFeel', _0: a};
 };
-var _user$project$Main$CreateFeel = {ctor: 'CreateFeel'};
+var _user$project$Main$CreateFeel = function (a) {
+	return {ctor: 'CreateFeel', _0: a};
+};
 var _user$project$Main$ChangePage = function (a) {
 	return {ctor: 'ChangePage', _0: a};
 };
@@ -13952,7 +14130,7 @@ var _user$project$Main$NoOp = {ctor: 'NoOp'};
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Msg":{"args":[],"tags":{"ExperienceFeel":["Main.Feel"],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"RemoveFeelFromExperiencedness":["Main.Feel"],"CreateFeel":[],"NoOp":[]}},"Main.Page":{"args":[],"tags":{"Home":[],"Users":[],"FeelsNew":[],"NotFound":[],"Feels":[]}}},"aliases":{"Main.Idea":{"args":[],"type":"{ id : Int, description : String, voteCount : Int }"},"Main.Feel":{"args":[],"type":"{ id : Int , emoji : String , feltCount : Int , ideas : List Main.Idea , name : String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Msg":{"args":[],"tags":{"ExperienceFeel":["Main.Feel"],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"RemoveFeelFromExperiencedness":["Main.Feel"],"CreateFeel":["Main.Feel"],"NoOp":[]}},"Main.Page":{"args":[],"tags":{"Home":[],"Users":[],"FeelsNew":[],"NotFound":[],"Feels":[]}}},"aliases":{"Main.Idea":{"args":[],"type":"{ id : Int, description : String, voteCount : Int }"},"Main.Feel":{"args":[],"type":"{ id : Int , emoji : String , feltCount : Int , ideas : List Main.Idea , name : String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

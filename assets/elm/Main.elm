@@ -2,6 +2,8 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (on, keyCode)
+import Json.Decode as Decode
 import Navigation
 
 
@@ -177,7 +179,9 @@ feelEmoji feel =
 
 init : Navigation.Location -> ( Model, Cmd Msg )
 init location =
-    ( location |> initPage |> initialModel
+    ( location
+        |> initPage
+        |> initialModel
     , Cmd.none
     )
 
@@ -190,7 +194,7 @@ type Msg
     = NoOp
     | Navigate Page
     | ChangePage Page
-    | CreateFeel
+    | CreateFeel Feel
     | ExperienceFeel Feel
     | RemoveFeelFromExperiencedness Feel
 
@@ -199,13 +203,20 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Navigate page ->
-            ( { model | currentPage = page }, pageToHash page |> Navigation.newUrl )
+            ( { model | currentPage = page }
+            , pageToHash page
+                |> Navigation.newUrl
+            )
 
         ChangePage page ->
-            ( { model | currentPage = page }, Cmd.none )
+            ( { model | currentPage = page }
+            , Cmd.none
+            )
 
-        CreateFeel ->
-            ( model, Cmd.none )
+        CreateFeel feel ->
+            ( { model | feels = feel :: model.feels }
+            , Cmd.none
+            )
 
         ExperienceFeel feel ->
             let
@@ -219,13 +230,19 @@ update msg model =
                                     currentFeel
                             )
             in
-                ( { model | feels = newFeels }, Cmd.none )
+                ( { model | feels = newFeels }
+                , Cmd.none
+                )
 
         RemoveFeelFromExperiencedness feel ->
-            ( model, Cmd.none )
+            ( model
+            , Cmd.none
+            )
 
         NoOp ->
-            ( model, Cmd.none )
+            ( model
+            , Cmd.none
+            )
 
 
 
@@ -262,7 +279,8 @@ view model =
 
 viewHome : Model -> Html Msg
 viewHome model =
-    div []
+    div
+        []
         [ header model
         , introSection model
         , feelsSection model
@@ -274,14 +292,16 @@ viewHome model =
 
 viewFeels : Model -> Html Msg
 viewFeels model =
-    div []
+    div
+        []
         [ feelsSection model
         ]
 
 
 viewUsers : Model -> Html Msg
 viewUsers model =
-    div []
+    div
+        []
         [ usersSection model
         ]
 
@@ -292,9 +312,16 @@ viewUsers model =
 
 header : Model -> Html Msg
 header model =
-    div [ class "header" ]
-        [ img [ class "logo", src "https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png" ] []
-        , p [ class "tagline" ] [ text tagLine ]
+    div
+        [ class "header" ]
+        [ img
+            [ class "logo"
+            , src "https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png"
+            ]
+            []
+        , p
+            [ class "tagline" ]
+            [ text tagLine ]
         ]
 
 
@@ -309,9 +336,14 @@ tagLine =
 
 introSection : Model -> Html Msg
 introSection model =
-    div [ class "intro" ]
-        [ div [ class "alert alert-info" ] [ text alertText ]
-        , p [] [ text introText ]
+    div
+        [ class "intro" ]
+        [ div
+            [ class "alert alert-info" ]
+            [ text alertText ]
+        , p
+            []
+            [ text introText ]
         ]
 
 
@@ -342,35 +374,47 @@ alertText =
 
 feelsSection : Model -> Html Msg
 feelsSection model =
-    div [ class "container" ]
+    div
+        [ class "container" ]
         [ feelsList model
         ]
 
 
 feelsList : Model -> Html Msg
 feelsList model =
-    div []
+    div
+        []
         (List.map feelItem model.feels)
 
 
 feelItem : Feel -> Html Msg
 feelItem feel =
-    a [ class "feel-link", href "#" ]
-        [ div [ class "feel-item" ]
-            [ p [ class "feel-emoji" ] [ text feel.emoji ]
-            , p [ class "feel-name" ] [ text feel.name ]
+    a
+        [ class "feel-link"
+        , href "#"
+        ]
+        [ div
+            [ class "feel-item" ]
+            [ p
+                [ class "feel-emoji" ]
+                [ text feel.emoji ]
+            , p
+                [ class "feel-name" ]
+                [ text feel.name ]
             ]
         ]
 
 
 feelIdeas : List Idea -> Html Msg
 feelIdeas ideas =
-    ul [] (List.map feelIdeaItem ideas)
+    ul []
+        (List.map feelIdeaItem ideas)
 
 
 feelIdeaItem : Idea -> Html Msg
 feelIdeaItem idea =
-    p [] [ text idea.description ]
+    p []
+        [ text idea.description ]
 
 
 
@@ -379,7 +423,9 @@ feelIdeaItem idea =
 
 feelShow : Feel -> Html Msg
 feelShow feel =
-    div [] []
+    div
+        []
+        []
 
 
 
@@ -388,19 +434,73 @@ feelShow feel =
 
 viewFeelsNew : Model -> Html Msg
 viewFeelsNew model =
-    div [ class "new-feel container" ]
-        [ h1 [] [ text "Create a New Feel" ]
-        , Html.form []
-            [ div [ class "form-group" ]
-                [ label [ for "feel-title" ] [ text "What feel do you want to add?" ]
-                , input [ id "feel-title", class "form-control", placeholder "Scrumtralescent", type_ "text", autofocus True ] []
+    div
+        [ class "new-feel container" ]
+        [ h1
+            []
+            [ text "Create a New Feel" ]
+        , Html.form
+            []
+            [ div
+                [ class "form-group" ]
+                [ label
+                    [ for "feel-name" ]
+                    [ text "What feel do you want to add?" ]
+                , input
+                    [ id "feel-name"
+                    , class "form-control"
+                    , placeholder "Scrumtralescent"
+                    , type_ "text"
+                    , autofocus True
+                    ]
+                    []
                 ]
-            , div [ class "form-group" ]
-                [ label [ for "feel-emoji" ] [ text "Is there an emoji that properly conveys this feel?" ]
-                , input [ id "feel-emoji", class "form-control", placeholder "😎", type_ "text" ] []
+            , div
+                [ class "form-group" ]
+                [ label
+                    [ for "feel-emoji" ]
+                    [ text "Is there an emoji that properly conveys this feel?" ]
+                , input
+                    [ id "feel-emoji"
+                    , class "form-control"
+                    , placeholder "😎"
+                    , type_ "text"
+                    ]
+                    []
                 ]
+            , button
+                [ class "btn btn-success"
+                , type_ "submit"
+                ]
+                [ text "Save" ]
+            , button
+                [ class "btn btn-default" ]
+                [ text "Cancel" ]
             ]
         ]
+
+
+newFeel : Int -> String -> String -> Feel
+newFeel id emoji name =
+    { id = id
+    , emoji = emoji
+    , feltCount = 0
+    , ideas = []
+    , name = name
+    }
+
+
+onEnter : Msg -> Attribute Msg
+onEnter msg =
+    -- on "keydown" (Decode.succeed (CreateFeel mockFeel))
+    let
+        isEnter code =
+            if code == 13 then
+                Decode.succeed msg
+            else
+                Decode.fail "not the right keycode"
+    in
+        on "keydown" (Decode.andThen isEnter keyCode)
 
 
 
@@ -409,31 +509,53 @@ viewFeelsNew model =
 
 feelButton : Html Msg
 feelButton =
-    div [ class "feel-button" ]
-        [ p [] [ text "Noticed a feel that's missing?" ]
-        , a [ class "btn btn-lg btn-success", href <| "#/feels/new" ] [ text "Create a Feel" ]
+    div
+        [ class "feel-button" ]
+        [ p
+            []
+            [ text "Noticed a feel that's missing?" ]
+        , a
+            [ class "btn btn-lg btn-success"
+            , href <| "#/feels/new"
+            ]
+            [ text "Create a Feel" ]
         ]
 
 
 feelsIndexButton : Html Msg
 feelsIndexButton =
-    div [ class "feels-index-button" ]
-        [ a [ class "btn btn-lg btn-info", href <| "#/feels" ] [ text "List All Feels" ]
+    div
+        [ class "feels-index-button" ]
+        [ a
+            [ class "btn btn-lg btn-info"
+            , href <| "#/feels"
+            ]
+            [ text "List All Feels" ]
         ]
 
 
 usersIndexButton : Html Msg
 usersIndexButton =
-    div [ class "users-index-button" ]
-        [ a [ class "btn btn-lg btn-default", href <| "#/users" ] [ text "List Users" ]
+    div
+        [ class "users-index-button" ]
+        [ a
+            [ class "btn btn-lg btn-default"
+            , href <| "#/users"
+            ]
+            [ text "List Users" ]
         ]
 
 
 userButton : Html Msg
 userButton =
-    div []
-        [ p [] [ text "Want to contribute?" ]
-        , button [] [ text "Create an Account" ]
+    div
+        []
+        [ p
+            []
+            [ text "Want to contribute?" ]
+        , button
+            []
+            [ text "Create an Account" ]
         ]
 
 
@@ -443,9 +565,14 @@ userButton =
 
 usersSection : Model -> Html Msg
 usersSection model =
-    div []
-        [ h2 [] [ text "Feelbot Users" ]
-        , p [] [ text "Proudly experiencing emotions since 2017." ]
+    div
+        []
+        [ h2
+            []
+            [ text "Feelbot Users" ]
+        , p
+            []
+            [ text "Proudly experiencing emotions since 2017." ]
         , usersList model.users
         , userButton
         ]
@@ -453,16 +580,23 @@ usersSection model =
 
 usersList : List User -> Html Msg
 usersList users =
-    div []
+    div
+        []
         (List.map userItem users)
 
 
 userItem : User -> Html Msg
 userItem user =
-    a [ href <| "#/users/" ++ (toString user.id) ]
-        [ div []
-            [ p [] [ text user.displayName ]
-            , p [] [ text <| "Ideas Contributed: " ++ (toString user.ideaCount) ]
+    a
+        [ href <| "#/users/" ++ (toString user.id) ]
+        [ div
+            []
+            [ p
+                []
+                [ text user.displayName ]
+            , p
+                []
+                [ text <| "Ideas Contributed: " ++ (toString user.ideaCount) ]
             ]
         ]
 
@@ -473,7 +607,9 @@ userItem user =
 
 userShow : User -> Html Msg
 userShow user =
-    div [] []
+    div
+        []
+        []
 
 
 
