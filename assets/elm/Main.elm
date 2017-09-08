@@ -23,7 +23,7 @@ type Page
     = Home
     | FeelsIndex
     | FeelsNew
-    | FeelsShow Feel
+    | FeelsShow String
     | UsersIndex
     | NotFound
 
@@ -357,6 +357,9 @@ view model =
         FeelsNew ->
             viewFeelsNew model
 
+        FeelsShow name ->
+            viewFeelsShow name
+
         UsersIndex ->
             viewUsersIndex model
 
@@ -475,7 +478,10 @@ feelsList : Model -> Html Msg
 feelsList model =
     div
         []
-        (List.map feelItem model.feels)
+        (model.feels
+            |> List.sortBy .name
+            |> List.map feelItem
+        )
 
 
 feelsSection : Model -> Html Msg
@@ -534,12 +540,11 @@ feelIdeaItem idea =
 ---- FEELS SHOW PAGE ----
 
 
-viewFeelsShow : Model -> Feel -> Html Msg
-viewFeelsShow model feel =
+viewFeelsShow : String -> Html Msg
+viewFeelsShow name =
     div
         [ class "container" ]
-        [ header model
-        , text feel.name
+        [ text name
         ]
 
 
@@ -755,21 +760,32 @@ initPage location =
 
 hashToPage : String -> Page
 hashToPage hash =
-    case hash of
-        "#/" ->
-            Home
+    let
+        hashList =
+            hash
+                |> String.split "/"
+                |> List.filter (\h -> h /= "" && h /= "#")
+    in
+        case hashList of
+            [] ->
+                Home
 
-        "#/feels" ->
-            FeelsIndex
+            [ "feels" ] ->
+                FeelsIndex
 
-        "#/feels/new" ->
-            FeelsNew
+            [ "feels", "new" ] ->
+                FeelsNew
 
-        "#/users" ->
-            UsersIndex
+            [ "feels", slug ] ->
+                Debug.log ""
+                    FeelsShow
+                    slug
 
-        _ ->
-            NotFound
+            [ "users" ] ->
+                UsersIndex
+
+            _ ->
+                NotFound
 
 
 pageToHash : Page -> String
@@ -784,8 +800,8 @@ pageToHash page =
         FeelsNew ->
             "#/feels/new"
 
-        FeelsShow feel ->
-            "#/feels/" ++ feel.name
+        FeelsShow name ->
+            "#/feels/" ++ name
 
         UsersIndex ->
             "#/users"
@@ -806,8 +822,8 @@ pageView model =
         FeelsNew ->
             viewFeelsNew model
 
-        FeelsShow feel ->
-            viewFeelsShow model feel
+        FeelsShow name ->
+            viewFeelsShow name
 
         UsersIndex ->
             viewUsersIndex model

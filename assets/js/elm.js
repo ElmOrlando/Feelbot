@@ -13233,7 +13233,7 @@ var _user$project$Main$pageToHash = function (page) {
 		case 'FeelsNew':
 			return '#/feels/new';
 		case 'FeelsShow':
-			return A2(_elm_lang$core$Basics_ops['++'], '#/feels/', _p0._0.name);
+			return A2(_elm_lang$core$Basics_ops['++'], '#/feels/', _p0._0);
 		case 'UsersIndex':
 			return '#/users';
 		default:
@@ -13427,6 +13427,20 @@ var _user$project$Main$newFeel = F3(
 			name: name
 		};
 	});
+var _user$project$Main$viewFeelsShow = function (name) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('container'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(name),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Main$feelIdeaItem = function (idea) {
 	return A2(
 		_elm_lang$html$Html$p,
@@ -13549,7 +13563,15 @@ var _user$project$Main$feelsList = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
-		A2(_elm_lang$core$List$map, _user$project$Main$feelItem, model.feels));
+		A2(
+			_elm_lang$core$List$map,
+			_user$project$Main$feelItem,
+			A2(
+				_elm_lang$core$List$sortBy,
+				function (_) {
+					return _.name;
+				},
+				model.feels)));
 };
 var _user$project$Main$alertText = '\n    Feelbot is currently in an early stage of development. The data from the\n    front-end isn\'t currently saved anywhere yet.\n    ';
 var _user$project$Main$introText = '\n    Feelbot is like Stack Overflow for developer feelings. It\'s a simple list of\n    common emotions that developers naturally tend to experience along with ideas\n    and suggestions for constructively working with those emotions.\n\n    Each \"feel\" has a set of user-generated \"ideas\" associated with it. These\n    suggestions can be voted up or down so that particularly relevant or strong\n    ideas appear at the top.\n    ';
@@ -13659,25 +13681,6 @@ var _user$project$Main$viewFeelsIndex = function (model) {
 			}
 		});
 };
-var _user$project$Main$viewFeelsShow = F2(
-	function (model, feel) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('container'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _user$project$Main$header(model),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(feel.name),
-					_1: {ctor: '[]'}
-				}
-			});
-	});
 var _user$project$Main$viewUsersIndex = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -14078,19 +14081,41 @@ var _user$project$Main$initialModel = function (page) {
 	return {currentPage: _user$project$Main$Home, errors: _user$project$Main$initialErrors, feels: _user$project$Main$sampleFeelData, newFeelEmoji: '', newFeelName: '', users: _user$project$Main$sampleUserData};
 };
 var _user$project$Main$hashToPage = function (hash) {
-	var _p5 = hash;
-	switch (_p5) {
-		case '#/':
+	var hashList = A2(
+		_elm_lang$core$List$filter,
+		function (h) {
+			return (!_elm_lang$core$Native_Utils.eq(h, '')) && (!_elm_lang$core$Native_Utils.eq(h, '#'));
+		},
+		A2(_elm_lang$core$String$split, '/', hash));
+	var _p5 = hashList;
+	_v3_5:
+	do {
+		if (_p5.ctor === '[]') {
 			return _user$project$Main$Home;
-		case '#/feels':
-			return _user$project$Main$FeelsIndex;
-		case '#/feels/new':
-			return _user$project$Main$FeelsNew;
-		case '#/users':
-			return _user$project$Main$UsersIndex;
-		default:
-			return _user$project$Main$NotFound;
-	}
+		} else {
+			if (_p5._1.ctor === '::') {
+				if ((_p5._0 === 'feels') && (_p5._1._1.ctor === '[]')) {
+					if (_p5._1._0 === 'new') {
+						return _user$project$Main$FeelsNew;
+					} else {
+						return A3(_elm_lang$core$Debug$log, '', _user$project$Main$FeelsShow, _p5._1._0);
+					}
+				} else {
+					break _v3_5;
+				}
+			} else {
+				switch (_p5._0) {
+					case 'feels':
+						return _user$project$Main$FeelsIndex;
+					case 'users':
+						return _user$project$Main$UsersIndex;
+					default:
+						break _v3_5;
+				}
+			}
+		}
+	} while(false);
+	return _user$project$Main$NotFound;
 };
 var _user$project$Main$initPage = function (location) {
 	return _user$project$Main$hashToPage(location.hash);
@@ -14326,6 +14351,8 @@ var _user$project$Main$view = function (model) {
 			return _user$project$Main$viewFeelsIndex(model);
 		case 'FeelsNew':
 			return _user$project$Main$viewFeelsNew(model);
+		case 'FeelsShow':
+			return _user$project$Main$viewFeelsShow(_p6._0);
 		case 'UsersIndex':
 			return _user$project$Main$viewUsersIndex(model);
 		default:
@@ -14342,7 +14369,7 @@ var _user$project$Main$pageView = function (model) {
 		case 'FeelsNew':
 			return _user$project$Main$viewFeelsNew(model);
 		case 'FeelsShow':
-			return A2(_user$project$Main$viewFeelsShow, model, _p7._0);
+			return _user$project$Main$viewFeelsShow(_p7._0);
 		case 'UsersIndex':
 			return _user$project$Main$viewUsersIndex(model);
 		default:
@@ -14371,7 +14398,7 @@ var _user$project$Main$NoOp = {ctor: 'NoOp'};
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Msg":{"args":[],"tags":{"InputFeelEmoji":["String"],"SaveFeel":["Main.Feel"],"ExperienceFeel":["Main.Feel"],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"InputFeelName":["String"],"NoOp":[]}},"Main.Page":{"args":[],"tags":{"UsersIndex":[],"Home":[],"FeelsNew":[],"NotFound":[],"FeelsIndex":[],"FeelsShow":["Main.Feel"]}}},"aliases":{"Main.Idea":{"args":[],"type":"{ id : Int, description : String, voteCount : Int }"},"Main.Feel":{"args":[],"type":"{ id : Int , emoji : String , feltCount : Int , ideas : List Main.Idea , name : String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Msg":{"args":[],"tags":{"InputFeelEmoji":["String"],"SaveFeel":["Main.Feel"],"ExperienceFeel":["Main.Feel"],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"InputFeelName":["String"],"NoOp":[]}},"Main.Page":{"args":[],"tags":{"UsersIndex":[],"Home":[],"FeelsNew":[],"NotFound":[],"FeelsIndex":[],"FeelsShow":["String"]}}},"aliases":{"Main.Idea":{"args":[],"type":"{ id : Int, description : String, voteCount : Int }"},"Main.Feel":{"args":[],"type":"{ id : Int , emoji : String , feltCount : Int , ideas : List Main.Idea , name : String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
