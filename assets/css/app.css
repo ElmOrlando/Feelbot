@@ -22,27 +22,23 @@
 }
 
 .feel-item {
-  align-items: center;
   border: 2px solid #ccc;
   border-radius: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   margin: 10px;
-  max-width: 220px;
 }
 
 .feel-emoji {
   font-size: 8em;
-  margin: 0;
+  text-align: center;
 }
 
 .feel-name {
-  font-size: 2em;
+  font-size: 1.8em;
   font-weight: bold;
+  text-align: center;
 }
 
-.feel-button {
+.feel-button, .feels-index-button, .users-index-button  {
   font-size: 1.2em;
   margin-bottom: 30px;
   text-align: center;
