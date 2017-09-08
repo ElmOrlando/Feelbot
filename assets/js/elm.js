@@ -13228,17 +13228,19 @@ var _user$project$Main$pageToHash = function (page) {
 	switch (_p0.ctor) {
 		case 'Home':
 			return '#/';
-		case 'Feels':
+		case 'FeelsIndex':
 			return '#/feels';
 		case 'FeelsNew':
 			return '#/feels/new';
-		case 'Users':
+		case 'FeelsShow':
+			return A2(_elm_lang$core$Basics_ops['++'], '#/feels/', _p0._0.name);
+		case 'UsersIndex':
 			return '#/users';
 		default:
 			return '#/notfound';
 	}
 };
-var _user$project$Main$userShow = function (user) {
+var _user$project$Main$viewUsersShow = function (user) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -13323,42 +13325,6 @@ var _user$project$Main$userButton = A2(
 			_1: {ctor: '[]'}
 		}
 	});
-var _user$project$Main$usersSection = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$h2,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Feelbot Users'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$p,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Proudly experiencing emotions since 2017.'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$usersList(model.users),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$userButton,
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
 var _user$project$Main$usersIndexButton = A2(
 	_elm_lang$html$Html$div,
 	{
@@ -13451,15 +13417,6 @@ var _user$project$Main$feelButton = A2(
 			_1: {ctor: '[]'}
 		}
 	});
-var _user$project$Main$onEnter = function (msg) {
-	var isEnter = function (code) {
-		return _elm_lang$core$Native_Utils.eq(code, 13) ? _elm_lang$core$Json_Decode$succeed(msg) : _elm_lang$core$Json_Decode$fail('not the right keycode');
-	};
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'keydown',
-		A2(_elm_lang$core$Json_Decode$andThen, isEnter, _elm_lang$html$Html_Events$keyCode));
-};
 var _user$project$Main$newFeel = F3(
 	function (id, emoji, name) {
 		return {
@@ -13470,176 +13427,6 @@ var _user$project$Main$newFeel = F3(
 			name: name
 		};
 	});
-var _user$project$Main$viewFeelsNew = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('new-feel container'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$h1,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Create a New Feel'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$form,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('form-group'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$label,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$for('feel-name'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('What feel do you want to add?'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$input,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$id('feel-name'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('form-control'),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$placeholder('Scrumtralescent'),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$type_('text'),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$autofocus(true),
-															_1: {ctor: '[]'}
-														}
-													}
-												}
-											}
-										},
-										{ctor: '[]'}),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('form-group'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$label,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$for('feel-emoji'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Is there an emoji that properly conveys this feel?'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$input,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$id('feel-emoji'),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('form-control'),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$placeholder('😎'),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$type_('text'),
-															_1: {ctor: '[]'}
-														}
-													}
-												}
-											},
-											{ctor: '[]'}),
-										_1: {ctor: '[]'}
-									}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$button,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('btn btn-success'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$type_('submit'),
-											_1: {ctor: '[]'}
-										}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Save'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$button,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('btn btn-default'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Cancel'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {ctor: '[]'}
-								}
-							}
-						}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$Main$feelShow = function (feel) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{ctor: '[]'});
-};
 var _user$project$Main$feelIdeaItem = function (idea) {
 	return A2(
 		_elm_lang$html$Html$p,
@@ -13658,64 +13445,91 @@ var _user$project$Main$feelIdeas = function (ideas) {
 };
 var _user$project$Main$feelItem = function (feel) {
 	return A2(
-		_elm_lang$html$Html$a,
+		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('feel-link'),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$href('#'),
-				_1: {ctor: '[]'}
-			}
+			_0: _elm_lang$html$Html_Attributes$class('col-xs-4'),
+			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$a,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('feel-item'),
-					_1: {ctor: '[]'}
+					_0: _elm_lang$html$Html_Attributes$class('feel-link'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'#/feels/',
+								_elm_lang$core$String$toLower(feel.name))),
+						_1: {ctor: '[]'}
+					}
 				},
 				{
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$p,
+						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('feel-emoji'),
+							_0: _elm_lang$html$Html_Attributes$class('feel-item'),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(feel.emoji),
-							_1: {ctor: '[]'}
+							_0: A2(
+								_elm_lang$html$Html$p,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('feel-emoji'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(feel.emoji),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$p,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('feel-name'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(feel.name),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
 						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$p,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('feel-name'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(feel.name),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
+					_1: {ctor: '[]'}
 				}),
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$feelsList = function (model) {
+var _user$project$Main$feelsListForFrontPage = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
-		A2(_elm_lang$core$List$map, _user$project$Main$feelItem, model.feels));
+		A2(
+			_elm_lang$core$List$map,
+			_user$project$Main$feelItem,
+			A2(
+				_elm_lang$core$List$take,
+				6,
+				_elm_lang$core$List$reverse(
+					A2(
+						_elm_lang$core$List$sortBy,
+						function (_) {
+							return _.feltCount;
+						},
+						model.feels)))));
 };
 var _user$project$Main$feelsSection = function (model) {
 	return A2(
@@ -13727,9 +13541,15 @@ var _user$project$Main$feelsSection = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Main$feelsList(model),
+			_0: _user$project$Main$feelsListForFrontPage(model),
 			_1: {ctor: '[]'}
 		});
+};
+var _user$project$Main$feelsList = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		A2(_elm_lang$core$List$map, _user$project$Main$feelItem, model.feels));
 };
 var _user$project$Main$alertText = '\n    Feelbot is currently in an early stage of development. The data from the\n    front-end isn\'t currently saved anywhere yet.\n    ';
 var _user$project$Main$introText = '\n    Feelbot is like Stack Overflow for developer feelings. It\'s a simple list of\n    common emotions that developers naturally tend to experience along with ideas\n    and suggestions for constructively working with those emotions.\n\n    Each \"feel\" has a set of user-generated \"ideas\" associated with it. These\n    suggestions can be voted up or down so that particularly relevant or strong\n    ideas appear at the top.\n    ';
@@ -13781,17 +13601,28 @@ var _user$project$Main$header = function (model) {
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$img,
+				_elm_lang$html$Html$a,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('logo'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$src('https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png'),
-						_1: {ctor: '[]'}
-					}
+					_0: _elm_lang$html$Html_Attributes$href('#/'),
+					_1: {ctor: '[]'}
 				},
-				{ctor: '[]'}),
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$img,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('logo'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$src('https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {ctor: '[]'}
+				}),
 			_1: {
 				ctor: '::',
 				_0: A2(
@@ -13810,13 +13641,90 @@ var _user$project$Main$header = function (model) {
 			}
 		});
 };
+var _user$project$Main$viewFeelsIndex = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('container'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$header(model),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$feelsList(model),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$viewFeelsShow = F2(
+	function (model, feel) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('container'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _user$project$Main$header(model),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(feel.name),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$Main$viewUsersIndex = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$Main$header(model),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h2,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Feelbot Users'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Proudly experiencing emotions since 2017.'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$usersList(model.users),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$userButton,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
 var _user$project$Main$viewUsers = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _user$project$Main$usersSection(model),
+			_0: _user$project$Main$viewUsersIndex(model),
 			_1: {ctor: '[]'}
 		});
 };
@@ -13833,7 +13741,11 @@ var _user$project$Main$viewFeels = function (model) {
 var _user$project$Main$viewHome = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('col-xs-12'),
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: _user$project$Main$header(model),
@@ -13860,79 +13772,39 @@ var _user$project$Main$viewHome = function (model) {
 			}
 		});
 };
-var _user$project$Main$pageView = function (model) {
-	var _p1 = model.currentPage;
-	switch (_p1.ctor) {
-		case 'Home':
-			return _user$project$Main$viewHome(model);
-		case 'Feels':
-			return _user$project$Main$viewFeels(model);
-		case 'FeelsNew':
-			return _user$project$Main$viewFeelsNew(model);
-		case 'Users':
-			return _user$project$Main$viewUsers(model);
-		default:
-			return _user$project$Main$viewHome(model);
-	}
-};
-var _user$project$Main$view = function (model) {
-	var _p2 = model.currentPage;
-	switch (_p2.ctor) {
-		case 'Home':
-			return _user$project$Main$viewHome(model);
-		case 'Feels':
-			return _user$project$Main$viewFeels(model);
-		case 'FeelsNew':
-			return _user$project$Main$viewFeelsNew(model);
-		case 'Users':
-			return _user$project$Main$viewUsers(model);
-		default:
-			return _user$project$Main$viewHome(model);
-	}
-};
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p3 = msg;
-		switch (_p3.ctor) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
 			case 'Navigate':
-				var _p4 = _p3._0;
+				var _p2 = _p1._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{currentPage: _p4}),
+						{currentPage: _p2}),
 					_1: _elm_lang$navigation$Navigation$newUrl(
-						_user$project$Main$pageToHash(_p4))
+						_user$project$Main$pageToHash(_p2))
 				};
 			case 'ChangePage':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{currentPage: _p3._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'CreateFeel':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							feels: {ctor: '::', _0: _p3._0, _1: model.feels}
-						}),
+						{currentPage: _p1._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ExperienceFeel':
-				var _p5 = _p3._0;
+				var _p3 = _p1._0;
 				var newFeels = A2(
 					_elm_lang$core$List$map,
 					function (currentFeel) {
-						return _elm_lang$core$Native_Utils.eq(currentFeel.id, _p5.id) ? _elm_lang$core$Native_Utils.update(
-							_p5,
-							{feltCount: _p5.feltCount + 1}) : currentFeel;
+						return _elm_lang$core$Native_Utils.eq(currentFeel.id, _p3.id) ? _elm_lang$core$Native_Utils.update(
+							_p3,
+							{feltCount: _p3.feltCount + 1}) : currentFeel;
 					},
 					model.feels);
 				return {
@@ -13942,21 +13814,67 @@ var _user$project$Main$update = F2(
 						{feels: newFeels}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'RemoveFeelFromExperiencedness':
+			case 'InputFeelEmoji':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{newFeelEmoji: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'InputFeelName':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{newFeelName: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'NoOp':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			default:
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				return _elm_lang$core$Native_Utils.eq(model.newFeelName, '') ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							errors: {newFeelEmojiError: '', newFeelNameError: 'The new feel name shouldn\'t be blank.'}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : (_elm_lang$core$Native_Utils.eq(model.newFeelEmoji, '') ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							errors: {newFeelEmojiError: 'The new feel emoji shouldn\'t be blank.', newFeelNameError: ''}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : ((!_elm_lang$core$Native_Utils.eq(
+					_elm_lang$core$String$length(model.newFeelEmoji),
+					1)) ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							errors: {newFeelEmojiError: 'The emoji should just be a single character. This field shouldn\'t have more than one character.', newFeelNameError: ''}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							feels: {ctor: '::', _0: _p1._0, _1: model.feels}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				}));
 		}
 	});
-var _user$project$Main$feelEmoji = function (feel) {
-	var _p6 = feel;
-	switch (_p6.ctor) {
-		case 'Angry':
-			return '😠';
+var _user$project$Main$feelEmoji = function (feelName) {
+	var _p4 = feelName;
+	switch (_p4) {
 		case 'Confused':
 			return '😕';
-		case 'Fearful':
-			return '😨';
 		case 'Frustrated':
 			return '😖';
 		case 'Overwhelmed':
@@ -13971,8 +13889,10 @@ var _user$project$Main$feelEmoji = function (feel) {
 			return '😶';
 		case 'Unmotivated':
 			return '😐';
-		default:
+		case 'Worried':
 			return '😟';
+		default:
+			return '';
 	}
 };
 var _user$project$Main$sampleIdeaData = {
@@ -13984,96 +13904,130 @@ var _user$project$Main$sampleIdeaData = {
 		_1: {ctor: '[]'}
 	}
 };
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {currentPage: a, feels: b, users: c};
-	});
-var _user$project$Main$User = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {id: a, avatar: b, displayName: c, feelCount: d, feelsExperienced: e, ideaCount: f, ideasCreated: g, username: h};
-	});
-var _user$project$Main$Feel = F5(
-	function (a, b, c, d, e) {
-		return {id: a, emoji: b, feltCount: c, ideas: d, name: e};
-	});
-var _user$project$Main$Idea = F3(
-	function (a, b, c) {
-		return {id: a, description: b, voteCount: c};
-	});
-var _user$project$Main$NotFound = {ctor: 'NotFound'};
-var _user$project$Main$Users = {ctor: 'Users'};
-var _user$project$Main$FeelsNew = {ctor: 'FeelsNew'};
-var _user$project$Main$Feels = {ctor: 'Feels'};
-var _user$project$Main$Home = {ctor: 'Home'};
-var _user$project$Main$hashToPage = function (hash) {
-	var _p7 = hash;
-	switch (_p7) {
-		case '#/':
-			return _user$project$Main$Home;
-		case '#/feels':
-			return _user$project$Main$Feels;
-		case '#/feels/new':
-			return _user$project$Main$FeelsNew;
-		case '#/users':
-			return _user$project$Main$Users;
-		default:
-			return _user$project$Main$NotFound;
-	}
-};
-var _user$project$Main$initPage = function (location) {
-	return _user$project$Main$hashToPage(location.hash);
-};
-var _user$project$Main$Worried = {ctor: 'Worried'};
-var _user$project$Main$Unmotivated = {ctor: 'Unmotivated'};
-var _user$project$Main$Unheard = {ctor: 'Unheard'};
-var _user$project$Main$Tired = {ctor: 'Tired'};
-var _user$project$Main$Sad = {ctor: 'Sad'};
-var _user$project$Main$Reluctant = {ctor: 'Reluctant'};
-var _user$project$Main$Overwhelmed = {ctor: 'Overwhelmed'};
-var _user$project$Main$Frustrated = {ctor: 'Frustrated'};
-var _user$project$Main$Fearful = {ctor: 'Fearful'};
-var _user$project$Main$Confused = {ctor: 'Confused'};
-var _user$project$Main$Angry = {ctor: 'Angry'};
 var _user$project$Main$sampleFeelData = {
 	ctor: '::',
 	_0: {
 		id: 1,
-		emoji: _user$project$Main$feelEmoji(_user$project$Main$Tired),
-		feltCount: 0,
+		emoji: _user$project$Main$feelEmoji('Frustrated'),
+		feltCount: 99,
 		ideas: {
 			ctor: '::',
 			_0: {id: 1, description: 'Take a walk.', voteCount: 1},
 			_1: {ctor: '[]'}
 		},
-		name: 'Tired'
+		name: 'Frustrated'
 	},
 	_1: {
 		ctor: '::',
 		_0: {
-			id: 100,
-			emoji: _user$project$Main$feelEmoji(_user$project$Main$Angry),
-			feltCount: 10,
+			id: 2,
+			emoji: _user$project$Main$feelEmoji('Unmotivated'),
+			feltCount: 88,
 			ideas: {
 				ctor: '::',
-				_0: {id: 1, description: 'Delete all your code.', voteCount: 1},
+				_0: {id: 2, description: 'Read a book.', voteCount: 2},
 				_1: {ctor: '[]'}
 			},
-			name: 'Angry'
+			name: 'Unmotivated'
 		},
 		_1: {
 			ctor: '::',
 			_0: {
-				id: 999,
-				emoji: _user$project$Main$feelEmoji(_user$project$Main$Unmotivated),
-				feltCount: 999,
+				id: 3,
+				emoji: _user$project$Main$feelEmoji('Tired'),
+				feltCount: 77,
 				ideas: {
 					ctor: '::',
-					_0: {id: 1, description: 'Read a book.', voteCount: 1},
+					_0: {id: 3, description: 'Take a break. Try the Headspace app.', voteCount: 3},
 					_1: {ctor: '[]'}
 				},
-				name: 'Unmotivated'
+				name: 'Tired'
 			},
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: {
+					id: 4,
+					emoji: _user$project$Main$feelEmoji('Unheard'),
+					feltCount: 66,
+					ideas: {
+						ctor: '::',
+						_0: {id: 4, description: 'Speak up!', voteCount: 4},
+						_1: {ctor: '[]'}
+					},
+					name: 'Unheard'
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						id: 5,
+						emoji: _user$project$Main$feelEmoji('Worried'),
+						feltCount: 55,
+						ideas: {
+							ctor: '::',
+							_0: {id: 5, description: 'Don\'t worry, be happy.', voteCount: 5},
+							_1: {ctor: '[]'}
+						},
+						name: 'Worried'
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							id: 6,
+							emoji: _user$project$Main$feelEmoji('Overwhelmed'),
+							feltCount: 44,
+							ideas: {
+								ctor: '::',
+								_0: {id: 6, description: 'Decrease your workload. Prioritize and focus on what\'s important.', voteCount: 6},
+								_1: {ctor: '[]'}
+							},
+							name: 'Overwhelmed'
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								id: 7,
+								emoji: _user$project$Main$feelEmoji('Sad'),
+								feltCount: 33,
+								ideas: {
+									ctor: '::',
+									_0: {id: 7, description: 'See if your company offers reimbursement for therapy costs.', voteCount: 7},
+									_1: {ctor: '[]'}
+								},
+								name: 'Sad'
+							},
+							_1: {
+								ctor: '::',
+								_0: {
+									id: 8,
+									emoji: _user$project$Main$feelEmoji('Confused'),
+									feltCount: 22,
+									ideas: {
+										ctor: '::',
+										_0: {id: 8, description: 'This may be a good sign that you\'re pushing your boundaries.', voteCount: 8},
+										_1: {ctor: '[]'}
+									},
+									name: 'Confused'
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										id: 9,
+										emoji: _user$project$Main$feelEmoji('Reluctant'),
+										feltCount: 11,
+										ideas: {
+											ctor: '::',
+											_0: {id: 9, description: 'Some hesitation is naturals.', voteCount: 9},
+											_1: {ctor: '[]'}
+										},
+										name: 'Reluctant'
+									},
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 };
@@ -14091,8 +14045,55 @@ var _user$project$Main$sampleUserData = {
 	},
 	_1: {ctor: '[]'}
 };
+var _user$project$Main$initialErrors = {newFeelEmojiError: '', newFeelNameError: ''};
+var _user$project$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {currentPage: a, errors: b, feels: c, newFeelEmoji: d, newFeelName: e, users: f};
+	});
+var _user$project$Main$Errors = F2(
+	function (a, b) {
+		return {newFeelEmojiError: a, newFeelNameError: b};
+	});
+var _user$project$Main$User = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {id: a, avatar: b, displayName: c, feelCount: d, feelsExperienced: e, ideaCount: f, ideasCreated: g, username: h};
+	});
+var _user$project$Main$Feel = F5(
+	function (a, b, c, d, e) {
+		return {id: a, emoji: b, feltCount: c, ideas: d, name: e};
+	});
+var _user$project$Main$Idea = F3(
+	function (a, b, c) {
+		return {id: a, description: b, voteCount: c};
+	});
+var _user$project$Main$NotFound = {ctor: 'NotFound'};
+var _user$project$Main$UsersIndex = {ctor: 'UsersIndex'};
+var _user$project$Main$FeelsShow = function (a) {
+	return {ctor: 'FeelsShow', _0: a};
+};
+var _user$project$Main$FeelsNew = {ctor: 'FeelsNew'};
+var _user$project$Main$FeelsIndex = {ctor: 'FeelsIndex'};
+var _user$project$Main$Home = {ctor: 'Home'};
 var _user$project$Main$initialModel = function (page) {
-	return {currentPage: _user$project$Main$Home, feels: _user$project$Main$sampleFeelData, users: _user$project$Main$sampleUserData};
+	return {currentPage: _user$project$Main$Home, errors: _user$project$Main$initialErrors, feels: _user$project$Main$sampleFeelData, newFeelEmoji: '', newFeelName: '', users: _user$project$Main$sampleUserData};
+};
+var _user$project$Main$hashToPage = function (hash) {
+	var _p5 = hash;
+	switch (_p5) {
+		case '#/':
+			return _user$project$Main$Home;
+		case '#/feels':
+			return _user$project$Main$FeelsIndex;
+		case '#/feels/new':
+			return _user$project$Main$FeelsNew;
+		case '#/users':
+			return _user$project$Main$UsersIndex;
+		default:
+			return _user$project$Main$NotFound;
+	}
+};
+var _user$project$Main$initPage = function (location) {
+	return _user$project$Main$hashToPage(location.hash);
 };
 var _user$project$Main$init = function (location) {
 	return {
@@ -14102,14 +14103,254 @@ var _user$project$Main$init = function (location) {
 		_1: _elm_lang$core$Platform_Cmd$none
 	};
 };
-var _user$project$Main$RemoveFeelFromExperiencedness = function (a) {
-	return {ctor: 'RemoveFeelFromExperiencedness', _0: a};
+var _user$project$Main$SaveFeel = function (a) {
+	return {ctor: 'SaveFeel', _0: a};
+};
+var _user$project$Main$InputFeelEmoji = function (a) {
+	return {ctor: 'InputFeelEmoji', _0: a};
+};
+var _user$project$Main$InputFeelName = function (a) {
+	return {ctor: 'InputFeelName', _0: a};
+};
+var _user$project$Main$viewFeelsNew = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('new-feel container'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$header(model),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h1,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Create a New Feel'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$form,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onSubmit(
+								_user$project$Main$SaveFeel(
+									A3(_user$project$Main$newFeel, 0, model.newFeelEmoji, model.newFeelName))),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('form-group'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$label,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$for('feel-name'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('What feel do you want to add?'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$input,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$autofocus(true),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('form-control'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$id('feel-name'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$InputFeelName),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$placeholder('Happy'),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$type_('text'),
+																	_1: {
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$value(model.newFeelName),
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}
+														}
+													}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$div,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('alert alert-danger'),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(model.errors.newFeelNameError),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('form-group'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$label,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$for('feel-emoji'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Is there an emoji that properly conveys this feel?'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$input,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('form-control'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$id('feel-emoji'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$InputFeelEmoji),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$placeholder('😎'),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$type_('text'),
+																	_1: {
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$value(model.newFeelEmoji),
+																		_1: {ctor: '[]'}
+																	}
+																}
+															}
+														}
+													}
+												},
+												{ctor: '[]'}),
+											_1: {ctor: '[]'}
+										}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$button,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('btn btn-success'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$type_('submit'),
+												_1: {ctor: '[]'}
+											}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Save'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('btn btn-default'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Cancel'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$view = function (model) {
+	var _p6 = model.currentPage;
+	switch (_p6.ctor) {
+		case 'Home':
+			return _user$project$Main$viewHome(model);
+		case 'FeelsIndex':
+			return _user$project$Main$viewFeelsIndex(model);
+		case 'FeelsNew':
+			return _user$project$Main$viewFeelsNew(model);
+		case 'UsersIndex':
+			return _user$project$Main$viewUsersIndex(model);
+		default:
+			return _user$project$Main$viewHome(model);
+	}
+};
+var _user$project$Main$pageView = function (model) {
+	var _p7 = model.currentPage;
+	switch (_p7.ctor) {
+		case 'Home':
+			return _user$project$Main$viewHome(model);
+		case 'FeelsIndex':
+			return _user$project$Main$viewFeelsIndex(model);
+		case 'FeelsNew':
+			return _user$project$Main$viewFeelsNew(model);
+		case 'FeelsShow':
+			return A2(_user$project$Main$viewFeelsShow, model, _p7._0);
+		case 'UsersIndex':
+			return _user$project$Main$viewUsersIndex(model);
+		default:
+			return _user$project$Main$viewHome(model);
+	}
 };
 var _user$project$Main$ExperienceFeel = function (a) {
 	return {ctor: 'ExperienceFeel', _0: a};
-};
-var _user$project$Main$CreateFeel = function (a) {
-	return {ctor: 'CreateFeel', _0: a};
 };
 var _user$project$Main$ChangePage = function (a) {
 	return {ctor: 'ChangePage', _0: a};
@@ -14130,7 +14371,7 @@ var _user$project$Main$NoOp = {ctor: 'NoOp'};
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Msg":{"args":[],"tags":{"ExperienceFeel":["Main.Feel"],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"RemoveFeelFromExperiencedness":["Main.Feel"],"CreateFeel":["Main.Feel"],"NoOp":[]}},"Main.Page":{"args":[],"tags":{"Home":[],"Users":[],"FeelsNew":[],"NotFound":[],"Feels":[]}}},"aliases":{"Main.Idea":{"args":[],"type":"{ id : Int, description : String, voteCount : Int }"},"Main.Feel":{"args":[],"type":"{ id : Int , emoji : String , feltCount : Int , ideas : List Main.Idea , name : String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Msg":{"args":[],"tags":{"InputFeelEmoji":["String"],"SaveFeel":["Main.Feel"],"ExperienceFeel":["Main.Feel"],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"InputFeelName":["String"],"NoOp":[]}},"Main.Page":{"args":[],"tags":{"UsersIndex":[],"Home":[],"FeelsNew":[],"NotFound":[],"FeelsIndex":[],"FeelsShow":["Main.Feel"]}}},"aliases":{"Main.Idea":{"args":[],"type":"{ id : Int, description : String, voteCount : Int }"},"Main.Feel":{"args":[],"type":"{ id : Int , emoji : String , feltCount : Int , ideas : List Main.Idea , name : String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

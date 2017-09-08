@@ -2,8 +2,7 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (on, keyCode)
-import Json.Decode as Decode
+import Html.Events exposing (onClick, onInput, onSubmit)
 import Navigation
 
 
@@ -12,17 +11,27 @@ import Navigation
 
 type alias Model =
     { currentPage : Page
+    , errors : Errors
     , feels : List Feel
+    , newFeelEmoji : String
+    , newFeelName : String
     , users : List User
     }
 
 
 type Page
     = Home
-    | Feels
+    | FeelsIndex
     | FeelsNew
-    | Users
+    | FeelsShow Feel
+    | UsersIndex
     | NotFound
+
+
+type alias Errors =
+    { newFeelEmojiError : String
+    , newFeelNameError : String
+    }
 
 
 type alias User =
@@ -56,45 +65,121 @@ type alias Idea =
 initialModel : Page -> Model
 initialModel page =
     { currentPage = Home
+    , errors = initialErrors
     , feels = sampleFeelData
+    , newFeelEmoji = ""
+    , newFeelName = ""
     , users = sampleUserData
+    }
+
+
+initialErrors : Errors
+initialErrors =
+    { newFeelEmojiError = ""
+    , newFeelNameError = ""
     }
 
 
 sampleFeelData : List Feel
 sampleFeelData =
     [ { id = 1
-      , emoji = feelEmoji Tired
-      , feltCount = 0
+      , emoji = feelEmoji "Frustrated"
+      , feltCount = 99
       , ideas =
             [ { id = 1
               , description = "Take a walk."
               , voteCount = 1
               }
             ]
-      , name = "Tired"
+      , name = "Frustrated"
       }
-    , { id = 100
-      , emoji = feelEmoji Angry
-      , feltCount = 10
+    , { id = 2
+      , emoji = feelEmoji "Unmotivated"
+      , feltCount = 88
       , ideas =
-            [ { id = 1
-              , description = "Delete all your code."
-              , voteCount = 1
-              }
-            ]
-      , name = "Angry"
-      }
-    , { id = 999
-      , emoji = feelEmoji Unmotivated
-      , feltCount = 999
-      , ideas =
-            [ { id = 1
+            [ { id = 2
               , description = "Read a book."
-              , voteCount = 1
+              , voteCount = 2
               }
             ]
       , name = "Unmotivated"
+      }
+    , { id = 3
+      , emoji = feelEmoji "Tired"
+      , feltCount = 77
+      , ideas =
+            [ { id = 3
+              , description = "Take a break. Try the Headspace app."
+              , voteCount = 3
+              }
+            ]
+      , name = "Tired"
+      }
+    , { id = 4
+      , emoji = feelEmoji "Unheard"
+      , feltCount = 66
+      , ideas =
+            [ { id = 4
+              , description = "Speak up!"
+              , voteCount = 4
+              }
+            ]
+      , name = "Unheard"
+      }
+    , { id = 5
+      , emoji = feelEmoji "Worried"
+      , feltCount = 55
+      , ideas =
+            [ { id = 5
+              , description = "Don't worry, be happy."
+              , voteCount = 5
+              }
+            ]
+      , name = "Worried"
+      }
+    , { id = 6
+      , emoji = feelEmoji "Overwhelmed"
+      , feltCount = 44
+      , ideas =
+            [ { id = 6
+              , description = "Decrease your workload. Prioritize and focus on what's important."
+              , voteCount = 6
+              }
+            ]
+      , name = "Overwhelmed"
+      }
+    , { id = 7
+      , emoji = feelEmoji "Sad"
+      , feltCount = 33
+      , ideas =
+            [ { id = 7
+              , description = "See if your company offers reimbursement for therapy costs."
+              , voteCount = 7
+              }
+            ]
+      , name = "Sad"
+      }
+    , { id = 8
+      , emoji = feelEmoji "Confused"
+      , feltCount = 22
+      , ideas =
+            [ { id = 8
+              , description = "This may be a good sign that you're pushing your boundaries."
+              , voteCount = 8
+              }
+            ]
+      , name = "Confused"
+      }
+    , { id = 9
+      , emoji = feelEmoji "Reluctant"
+      , feltCount = 11
+      , ideas =
+            [ { id = 9
+              , description = "Some hesitation is naturals."
+              , voteCount = 9
+              }
+            ]
+      , name = "Reluctant"
       }
     ]
 
@@ -126,55 +211,38 @@ sampleIdeaData =
     ]
 
 
-type Feels
-    = Angry
-    | Confused
-    | Fearful
-    | Frustrated
-    | Overwhelmed
-    | Reluctant
-    | Sad
-    | Tired
-    | Unheard
-    | Unmotivated
-    | Worried
-
-
-feelEmoji : Feels -> String
-feelEmoji feel =
-    case feel of
-        Angry ->
-            "😠"
-
-        Confused ->
+feelEmoji : String -> String
+feelEmoji feelName =
+    case feelName of
+        "Confused" ->
             "😕"
 
-        Fearful ->
-            "😨"
-
-        Frustrated ->
+        "Frustrated" ->
             "😖"
 
-        Overwhelmed ->
+        "Overwhelmed" ->
             "😣"
 
-        Reluctant ->
+        "Reluctant" ->
             "😯"
 
-        Sad ->
+        "Sad" ->
             "😢"
 
-        Tired ->
+        "Tired" ->
             "😫"
 
-        Unheard ->
+        "Unheard" ->
             "😶"
 
-        Unmotivated ->
+        "Unmotivated" ->
             "😐"
 
-        Worried ->
+        "Worried" ->
             "😟"
+
+        _ ->
+            ""
 
 
 init : Navigation.Location -> ( Model, Cmd Msg )
@@ -194,9 +262,10 @@ type Msg
     = NoOp
     | Navigate Page
     | ChangePage Page
-    | CreateFeel Feel
     | ExperienceFeel Feel
-    | RemoveFeelFromExperiencedness Feel
+    | InputFeelName String
+    | InputFeelEmoji String
+    | SaveFeel Feel
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -210,11 +279,6 @@ update msg model =
 
         ChangePage page ->
             ( { model | currentPage = page }
-            , Cmd.none
-            )
-
-        CreateFeel feel ->
-            ( { model | feels = feel :: model.feels }
             , Cmd.none
             )
 
@@ -234,8 +298,13 @@ update msg model =
                 , Cmd.none
                 )
 
-        RemoveFeelFromExperiencedness feel ->
-            ( model
+        InputFeelEmoji emoji ->
+            ( { model | newFeelEmoji = emoji }
+            , Cmd.none
+            )
+
+        InputFeelName name ->
+            ( { model | newFeelName = name }
             , Cmd.none
             )
 
@@ -243,6 +312,24 @@ update msg model =
             ( model
             , Cmd.none
             )
+
+        SaveFeel feel ->
+            if model.newFeelName == "" then
+                ( { model | errors = { newFeelEmojiError = "", newFeelNameError = "The new feel name shouldn't be blank." } }
+                , Cmd.none
+                )
+            else if model.newFeelEmoji == "" then
+                ( { model | errors = { newFeelEmojiError = "The new feel emoji shouldn't be blank.", newFeelNameError = "" } }
+                , Cmd.none
+                )
+            else if String.length model.newFeelEmoji /= 1 then
+                ( { model | errors = { newFeelEmojiError = "The emoji should just be a single character. This field shouldn't have more than one character.", newFeelNameError = "" } }
+                , Cmd.none
+                )
+            else
+                ( { model | feels = feel :: model.feels }
+                , Cmd.none
+                )
 
 
 
@@ -264,14 +351,14 @@ view model =
         Home ->
             viewHome model
 
-        Feels ->
-            viewFeels model
+        FeelsIndex ->
+            viewFeelsIndex model
 
         FeelsNew ->
             viewFeelsNew model
 
-        Users ->
-            viewUsers model
+        UsersIndex ->
+            viewUsersIndex model
 
         _ ->
             viewHome model
@@ -280,7 +367,7 @@ view model =
 viewHome : Model -> Html Msg
 viewHome model =
     div
-        []
+        [ class "col-xs-12" ]
         [ header model
         , introSection model
         , feelsSection model
@@ -302,7 +389,7 @@ viewUsers : Model -> Html Msg
 viewUsers model =
     div
         []
-        [ usersSection model
+        [ viewUsersIndex model
         ]
 
 
@@ -314,11 +401,14 @@ header : Model -> Html Msg
 header model =
     div
         [ class "header" ]
-        [ img
-            [ class "logo"
-            , src "https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png"
+        [ a
+            [ href "#/" ]
+            [ img
+                [ class "logo"
+                , src "https://a.slack-edge.com/ae7f/plugins/hubot/assets/service_512.png"
+                ]
+                []
             ]
-            []
         , p
             [ class "tagline" ]
             [ text tagLine ]
@@ -372,11 +462,12 @@ alertText =
 ---- FEELS INDEX PAGE ----
 
 
-feelsSection : Model -> Html Msg
-feelsSection model =
+viewFeelsIndex : Model -> Html Msg
+viewFeelsIndex model =
     div
         [ class "container" ]
-        [ feelsList model
+        [ header model
+        , feelsList model
         ]
 
 
@@ -387,20 +478,42 @@ feelsList model =
         (List.map feelItem model.feels)
 
 
+feelsSection : Model -> Html Msg
+feelsSection model =
+    div
+        [ class "container" ]
+        [ feelsListForFrontPage model
+        ]
+
+
+feelsListForFrontPage : Model -> Html Msg
+feelsListForFrontPage model =
+    div
+        []
+        (model.feels
+            |> List.sortBy .feltCount
+            |> List.reverse
+            |> List.take 6
+            |> List.map feelItem
+        )
+
+
 feelItem : Feel -> Html Msg
 feelItem feel =
-    a
-        [ class "feel-link"
-        , href "#"
-        ]
-        [ div
-            [ class "feel-item" ]
-            [ p
-                [ class "feel-emoji" ]
-                [ text feel.emoji ]
-            , p
-                [ class "feel-name" ]
-                [ text feel.name ]
+    div [ class "col-xs-4" ]
+        [ a
+            [ class "feel-link"
+            , href <| "#/feels/" ++ (feel.name |> String.toLower)
+            ]
+            [ div
+                [ class "feel-item" ]
+                [ p
+                    [ class "feel-emoji" ]
+                    [ text feel.emoji ]
+                , p
+                    [ class "feel-name" ]
+                    [ text feel.name ]
+                ]
             ]
         ]
 
@@ -421,11 +534,13 @@ feelIdeaItem idea =
 ---- FEELS SHOW PAGE ----
 
 
-feelShow : Feel -> Html Msg
-feelShow feel =
+viewFeelsShow : Model -> Feel -> Html Msg
+viewFeelsShow model feel =
     div
-        []
-        []
+        [ class "container" ]
+        [ header model
+        , text feel.name
+        ]
 
 
 
@@ -436,24 +551,30 @@ viewFeelsNew : Model -> Html Msg
 viewFeelsNew model =
     div
         [ class "new-feel container" ]
-        [ h1
+        [ header model
+        , h1
             []
             [ text "Create a New Feel" ]
         , Html.form
-            []
+            [ onSubmit <| SaveFeel (newFeel 0 model.newFeelEmoji model.newFeelName) ]
             [ div
                 [ class "form-group" ]
                 [ label
                     [ for "feel-name" ]
                     [ text "What feel do you want to add?" ]
                 , input
-                    [ id "feel-name"
+                    [ autofocus True
                     , class "form-control"
-                    , placeholder "Scrumtralescent"
+                    , id "feel-name"
+                    , onInput InputFeelName
+                    , placeholder "Happy"
                     , type_ "text"
-                    , autofocus True
+                    , value model.newFeelName
                     ]
                     []
+                , div
+                    [ class "alert alert-danger" ]
+                    [ text model.errors.newFeelNameError ]
                 ]
             , div
                 [ class "form-group" ]
@@ -461,10 +582,12 @@ viewFeelsNew model =
                     [ for "feel-emoji" ]
                     [ text "Is there an emoji that properly conveys this feel?" ]
                 , input
-                    [ id "feel-emoji"
-                    , class "form-control"
+                    [ class "form-control"
+                    , id "feel-emoji"
+                    , onInput InputFeelEmoji
                     , placeholder "😎"
                     , type_ "text"
+                    , value model.newFeelEmoji
                     ]
                     []
                 ]
@@ -490,19 +613,6 @@ newFeel id emoji name =
     }
 
 
-onEnter : Msg -> Attribute Msg
-onEnter msg =
-    -- on "keydown" (Decode.succeed (CreateFeel mockFeel))
-    let
-        isEnter code =
-            if code == 13 then
-                Decode.succeed msg
-            else
-                Decode.fail "not the right keycode"
-    in
-        on "keydown" (Decode.andThen isEnter keyCode)
-
-
 
 ---- BUTTONS ----
 
@@ -516,7 +626,7 @@ feelButton =
             [ text "Noticed a feel that's missing?" ]
         , a
             [ class "btn btn-lg btn-success"
-            , href <| "#/feels/new"
+            , href "#/feels/new"
             ]
             [ text "Create a Feel" ]
         ]
@@ -528,7 +638,7 @@ feelsIndexButton =
         [ class "feels-index-button" ]
         [ a
             [ class "btn btn-lg btn-info"
-            , href <| "#/feels"
+            , href "#/feels"
             ]
             [ text "List All Feels" ]
         ]
@@ -540,7 +650,7 @@ usersIndexButton =
         [ class "users-index-button" ]
         [ a
             [ class "btn btn-lg btn-default"
-            , href <| "#/users"
+            , href "#/users"
             ]
             [ text "List Users" ]
         ]
@@ -563,11 +673,12 @@ userButton =
 ---- USERS ----
 
 
-usersSection : Model -> Html Msg
-usersSection model =
+viewUsersIndex : Model -> Html Msg
+viewUsersIndex model =
     div
         []
-        [ h2
+        [ header model
+        , h2
             []
             [ text "Feelbot Users" ]
         , p
@@ -605,8 +716,8 @@ userItem user =
 ---- USER SHOW ----
 
 
-userShow : User -> Html Msg
-userShow user =
+viewUsersShow : User -> Html Msg
+viewUsersShow user =
     div
         []
         []
@@ -649,13 +760,13 @@ hashToPage hash =
             Home
 
         "#/feels" ->
-            Feels
+            FeelsIndex
 
         "#/feels/new" ->
             FeelsNew
 
         "#/users" ->
-            Users
+            UsersIndex
 
         _ ->
             NotFound
@@ -667,13 +778,16 @@ pageToHash page =
         Home ->
             "#/"
 
-        Feels ->
+        FeelsIndex ->
             "#/feels"
 
         FeelsNew ->
             "#/feels/new"
 
-        Users ->
+        FeelsShow feel ->
+            "#/feels/" ++ feel.name
+
+        UsersIndex ->
             "#/users"
 
         NotFound ->
@@ -686,14 +800,17 @@ pageView model =
         Home ->
             viewHome model
 
-        Feels ->
-            viewFeels model
+        FeelsIndex ->
+            viewFeelsIndex model
 
         FeelsNew ->
             viewFeelsNew model
 
-        Users ->
-            viewUsers model
+        FeelsShow feel ->
+            viewFeelsShow model feel
+
+        UsersIndex ->
+            viewUsersIndex model
 
         _ ->
             viewHome model
