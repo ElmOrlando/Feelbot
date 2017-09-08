@@ -44,5 +44,37 @@
   text-align: center;
 }
 
+/* Feel Show Page */
+
+.feel-show-emoji {
+  font-size: 8.5em;
+  margin-top: 30px;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.feel-show-name {
+  font-size: 2em;
+  font-style: italic;
+  margin-top: -20px;
+  text-align: center;
+}
+
+.feel-show-button {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.feel-show-felt-count {
+  font-size: 1.2em;
+  text-align: center;
+}
+
+/* Feels Show Ideas */
+
+.feels-show-idea-description {
+  margin-left: 80px;
+}
+
 /* Phoenix flash messages */
 .alert:empty { display: none; }
