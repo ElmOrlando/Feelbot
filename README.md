@@ -31,7 +31,6 @@ help when it's needed.
 - **Front-end:** To help with the Elm front-end, check out the `Main.elm` file
   in the `assets/elm` folder. This file is automatically compiled and rendered
   as the home page.
-
 - **Back-end:** The back-end is currently built with the
   [Phoenix](http://www.phoenixframework.org/) framework.
 - **Styles:** Feel free to add CSS to the `assets/css/app.css` file to help out
@@ -63,3 +62,6 @@ help when it's needed.
 
 - **Slack Integration:** Use slash commands in Slack to hook in Feelbot
   suggestions.
+- **Sharing:** Feel free to create a
+  [GitHub issue](https://github.com/ElmOrlando/Feelbot/issues) or open a new
+  [Pull Request](https://github.com/ElmOrlando/Feelbot/pulls).
