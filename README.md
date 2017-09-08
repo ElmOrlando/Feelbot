@@ -31,6 +31,7 @@ help when it's needed.
 - **Front-end:** To help with the Elm front-end, check out the `Main.elm` file
   in the `assets/elm` folder. This file is automatically compiled and rendered
   as the home page.
+
 - **Back-end:** The back-end is currently built with the
   [Phoenix](http://www.phoenixframework.org/) framework.
 - **Styles:** Feel free to add CSS to the `assets/css/app.css` file to help out
@@ -39,6 +40,9 @@ help when it's needed.
 - **Ops:** This app is currently deployed to Heroku at
   `https://feelbot-app.herokuapp.com`. If you'd like to learn more about
   deploys or want to help out then let us know!
+- **Elm Modules:** The front-end application is currently a single giant Elm
+  file. If you want to contribute, feel free to break it up into modules using
+  something like [this blog post](http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html).
 
 ## What Can I Help With?
 
