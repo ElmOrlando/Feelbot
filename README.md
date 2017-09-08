@@ -31,6 +31,7 @@ help when it's needed.
 - **Front-end:** To help with the Elm front-end, check out the `Main.elm` file
   in the `assets/elm` folder. This file is automatically compiled and rendered
   as the home page.
+
 - **Back-end:** The back-end is currently built with the
   [Phoenix](http://www.phoenixframework.org/) framework.
 - **Styles:** Feel free to add CSS to the `assets/css/app.css` file to help out
@@ -39,18 +40,24 @@ help when it's needed.
 - **Ops:** This app is currently deployed to Heroku at
   `https://feelbot-app.herokuapp.com`. If you'd like to learn more about
   deploys or want to help out then let us know!
+- **Elm Modules:** The front-end application is currently a single giant Elm
+  file. If you want to contribute, feel free to break it up into modules using
+  something like [this blog post](http://blog.jenkster.com/2016/04/how-i-structure-elm-apps.html).
 
 ## What Can I Help With?
 
-- **Authentication:** Consider using
+- [ ] **Authentication:** Consider using
   [Auth0](https://auth0.com/blog/creating-your-first-elm-app-part-1/) to build
   the authentication features? Or use Phoenix Guardian and Ueberauth?
-- **Data Store:** Want to use RethinkDB? Firebase? PostgreSQL and Phoenix?
-- **Routing:** Consider checking out the elm
+- [ ] **Data Store:** Want to use RethinkDB? Firebase? PostgreSQL and Phoenix?
+- [x] **Routing:** Consider checking out the elm
   [Navigation](https://github.com/elm-lang/navigation) package so we could have
   direct URLs for feels.
-- **Styles:** Phoenix comes with Bootstrap by default, but feel free to try out
-  [`elm-mdl`](https://github.com/debois/elm-mdl) or toss some custom CSS.
+- [ ] **Styles:** Phoenix comes with Bootstrap by default, but feel free to try
+  out [`elm-mdl`](https://github.com/debois/elm-mdl) or toss some custom CSS.
+- [ ] **Tests:** Interested in writing tests for Elm? Check out the
+  [elm-test](http://package.elm-lang.org/packages/elm-community/elm-test/latest)
+  package and feel free to add in the `assets/elm` folder.
 
 ## Ideas
 

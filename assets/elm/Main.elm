@@ -262,7 +262,9 @@ type Msg
     = NoOp
     | Navigate Page
     | ChangePage Page
+    | DecrementIdeaVote Feel Idea
     | ExperienceFeel Feel
+    | IncrementIdeaVote Feel Idea
     | InputFeelName String
     | InputFeelEmoji String
     | SaveFeel Feel
@@ -282,6 +284,22 @@ update msg model =
             , Cmd.none
             )
 
+        DecrementIdeaVote feel idea ->
+            let
+                updateFeel currentFeel =
+                    if currentFeel.id == feel.id then
+                        { feel | ideas = List.map updateIdea feel.ideas }
+                    else
+                        currentFeel
+
+                updateIdea currentIdea =
+                    if currentIdea.id == idea.id then
+                        { idea | voteCount = idea.voteCount - 1 }
+                    else
+                        currentIdea
+            in
+                ( { model | feels = List.map updateFeel model.feels }, Cmd.none )
+
         ExperienceFeel feel ->
             let
                 newFeels =
@@ -297,6 +315,22 @@ update msg model =
                 ( { model | feels = newFeels }
                 , Cmd.none
                 )
+
+        IncrementIdeaVote feel idea ->
+            let
+                updateFeel currentFeel =
+                    if currentFeel.id == feel.id then
+                        { feel | ideas = List.map updateIdea feel.ideas }
+                    else
+                        currentFeel
+
+                updateIdea currentIdea =
+                    if currentIdea.id == idea.id then
+                        { idea | voteCount = idea.voteCount + 1 }
+                    else
+                        currentIdea
+            in
+                ( { model | feels = List.map updateFeel model.feels }, Cmd.none )
 
         InputFeelEmoji emoji ->
             ( { model | newFeelEmoji = emoji }
@@ -358,7 +392,7 @@ view model =
             viewFeelsNew model
 
         FeelsShow name ->
-            viewFeelsShow name
+            viewFeelsShow model name
 
         UsersIndex ->
             viewUsersIndex model
@@ -540,11 +574,116 @@ feelIdeaItem idea =
 ---- FEELS SHOW PAGE ----
 
 
-viewFeelsShow : String -> Html Msg
-viewFeelsShow name =
+viewFeelsShow : Model -> String -> Html Msg
+viewFeelsShow model name =
+    let
+        maybeFeel =
+            model.feels
+                |> List.filter (\f -> String.toLower f.name == name)
+                |> List.head
+    in
+        case maybeFeel of
+            Just feel ->
+                div
+                    [ class "feel-show container" ]
+                    [ viewFeelsShowHeader feel
+                    , viewFeelsShowIdeas feel
+                    , viewFeelsShowFooter feel
+                    ]
+
+            Nothing ->
+                div
+                    [ class "alert alert-danger" ]
+                    [ text "Feel not found!" ]
+
+
+viewFeelsShowHeader : Feel -> Html Msg
+viewFeelsShowHeader feel =
     div
-        [ class "container" ]
-        [ text name
+        [ class "feel-show-header" ]
+        [ a
+            [ class "feel-show-emoji-link"
+            , href "#/"
+            ]
+            [ p
+                [ class "feel-show-emoji" ]
+                [ text feel.emoji ]
+            ]
+        , p
+            [ class "feel-show-name" ]
+            [ text <| "Feeling " ++ feel.name ++ "?" ]
+        , div [ class "feel-show-button" ]
+            [ a
+                [ class "btn btn-info"
+                , onClick <| ExperienceFeel feel
+                ]
+                [ text "I have felt this." ]
+            ]
+        ]
+
+
+viewFeelsShowIdeas : Feel -> Html Msg
+viewFeelsShowIdeas feel =
+    div
+        [ class "feels-show-ideas" ]
+        [ div
+            []
+            (feel.ideas
+                |> List.map (viewFeelsShowIdea feel)
+            )
+        ]
+
+
+viewFeelsShowIdea : Feel -> Idea -> Html Msg
+viewFeelsShowIdea feel idea =
+    div
+        [ class "feels-show-idea" ]
+        [ viewFeelsShowIdeaVoteCount feel idea
+        , viewFeelsShowIdeaDescription idea
+        ]
+
+
+viewFeelsShowIdeaVoteCount : Feel -> Idea -> Html Msg
+viewFeelsShowIdeaVoteCount feel idea =
+    div
+        [ class "feels-show-idea-vote-count pull-left" ]
+        [ span
+            [ class "vote-up btn btn-xs btn-success"
+            , onClick <| IncrementIdeaVote feel idea
+            ]
+            [ text "+" ]
+        , p
+            []
+            [ text (toString idea.voteCount) ]
+        , span
+            [ class "vote-down btn btn-xs btn-danger"
+            , onClick <| DecrementIdeaVote feel idea
+            ]
+            [ text "-" ]
+        ]
+
+
+viewFeelsShowIdeaDescription : Idea -> Html Msg
+viewFeelsShowIdeaDescription idea =
+    div
+        [ class "feels-show-idea-description" ]
+        [ p
+            []
+            [ text idea.description ]
+        ]
+
+
+viewFeelsShowFooter : Feel -> Html Msg
+viewFeelsShowFooter feel =
+    div
+        []
+        [ p
+            [ class "feel-show-felt-count" ]
+            [ text <|
+                "You're not alone! This feel has been experienced by "
+                    ++ (toString feel.feltCount)
+                    ++ " users."
+            ]
         ]
 
 
@@ -669,7 +808,7 @@ userButton =
             []
             [ text "Want to contribute?" ]
         , button
-            []
+            [ class "btn btn-success" ]
             [ text "Create an Account" ]
         ]
 
@@ -777,9 +916,7 @@ hashToPage hash =
                 FeelsNew
 
             [ "feels", slug ] ->
-                Debug.log ""
-                    FeelsShow
-                    slug
+                FeelsShow slug
 
             [ "users" ] ->
                 UsersIndex
@@ -823,7 +960,7 @@ pageView model =
             viewFeelsNew model
 
         FeelsShow name ->
-            viewFeelsShow name
+            viewFeelsShow model name
 
         UsersIndex ->
             viewUsersIndex model

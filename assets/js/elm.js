@@ -13316,7 +13316,11 @@ var _user$project$Main$userButton = A2(
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$button,
-				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('btn btn-success'),
+					_1: {ctor: '[]'}
+				},
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html$text('Create an Account'),
@@ -13427,17 +13431,52 @@ var _user$project$Main$newFeel = F3(
 			name: name
 		};
 	});
-var _user$project$Main$viewFeelsShow = function (name) {
+var _user$project$Main$viewFeelsShowFooter = function (feel) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$p,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('feel-show-felt-count'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'You\'re not alone! This feel has been experienced by ',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(feel.feltCount),
+								' users.'))),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$viewFeelsShowIdeaDescription = function (idea) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('container'),
+			_0: _elm_lang$html$Html_Attributes$class('feels-show-idea-description'),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text(name),
+			_0: A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(idea.description),
+					_1: {ctor: '[]'}
+				}),
 			_1: {ctor: '[]'}
 		});
 };
@@ -13800,14 +13839,38 @@ var _user$project$Main$update = F2(
 						{currentPage: _p1._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'ExperienceFeel':
+			case 'DecrementIdeaVote':
+				var _p4 = _p1._1;
 				var _p3 = _p1._0;
+				var updateIdea = function (currentIdea) {
+					return _elm_lang$core$Native_Utils.eq(currentIdea.id, _p4.id) ? _elm_lang$core$Native_Utils.update(
+						_p4,
+						{voteCount: _p4.voteCount - 1}) : currentIdea;
+				};
+				var updateFeel = function (currentFeel) {
+					return _elm_lang$core$Native_Utils.eq(currentFeel.id, _p3.id) ? _elm_lang$core$Native_Utils.update(
+						_p3,
+						{
+							ideas: A2(_elm_lang$core$List$map, updateIdea, _p3.ideas)
+						}) : currentFeel;
+				};
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							feels: A2(_elm_lang$core$List$map, updateFeel, model.feels)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ExperienceFeel':
+				var _p5 = _p1._0;
 				var newFeels = A2(
 					_elm_lang$core$List$map,
 					function (currentFeel) {
-						return _elm_lang$core$Native_Utils.eq(currentFeel.id, _p3.id) ? _elm_lang$core$Native_Utils.update(
-							_p3,
-							{feltCount: _p3.feltCount + 1}) : currentFeel;
+						return _elm_lang$core$Native_Utils.eq(currentFeel.id, _p5.id) ? _elm_lang$core$Native_Utils.update(
+							_p5,
+							{feltCount: _p5.feltCount + 1}) : currentFeel;
 					},
 					model.feels);
 				return {
@@ -13815,6 +13878,30 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{feels: newFeels}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'IncrementIdeaVote':
+				var _p7 = _p1._1;
+				var _p6 = _p1._0;
+				var updateIdea = function (currentIdea) {
+					return _elm_lang$core$Native_Utils.eq(currentIdea.id, _p7.id) ? _elm_lang$core$Native_Utils.update(
+						_p7,
+						{voteCount: _p7.voteCount + 1}) : currentIdea;
+				};
+				var updateFeel = function (currentFeel) {
+					return _elm_lang$core$Native_Utils.eq(currentFeel.id, _p6.id) ? _elm_lang$core$Native_Utils.update(
+						_p6,
+						{
+							ideas: A2(_elm_lang$core$List$map, updateIdea, _p6.ideas)
+						}) : currentFeel;
+				};
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							feels: A2(_elm_lang$core$List$map, updateFeel, model.feels)
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'InputFeelEmoji':
@@ -13874,8 +13961,8 @@ var _user$project$Main$update = F2(
 		}
 	});
 var _user$project$Main$feelEmoji = function (feelName) {
-	var _p4 = feelName;
-	switch (_p4) {
+	var _p8 = feelName;
+	switch (_p8) {
 		case 'Confused':
 			return '😕';
 		case 'Frustrated':
@@ -14087,24 +14174,24 @@ var _user$project$Main$hashToPage = function (hash) {
 			return (!_elm_lang$core$Native_Utils.eq(h, '')) && (!_elm_lang$core$Native_Utils.eq(h, '#'));
 		},
 		A2(_elm_lang$core$String$split, '/', hash));
-	var _p5 = hashList;
+	var _p9 = hashList;
 	_v3_5:
 	do {
-		if (_p5.ctor === '[]') {
+		if (_p9.ctor === '[]') {
 			return _user$project$Main$Home;
 		} else {
-			if (_p5._1.ctor === '::') {
-				if ((_p5._0 === 'feels') && (_p5._1._1.ctor === '[]')) {
-					if (_p5._1._0 === 'new') {
+			if (_p9._1.ctor === '::') {
+				if ((_p9._0 === 'feels') && (_p9._1._1.ctor === '[]')) {
+					if (_p9._1._0 === 'new') {
 						return _user$project$Main$FeelsNew;
 					} else {
-						return A3(_elm_lang$core$Debug$log, '', _user$project$Main$FeelsShow, _p5._1._0);
+						return _user$project$Main$FeelsShow(_p9._1._0);
 					}
 				} else {
 					break _v3_5;
 				}
 			} else {
-				switch (_p5._0) {
+				switch (_p9._0) {
 					case 'feels':
 						return _user$project$Main$FeelsIndex;
 					case 'users':
@@ -14342,9 +14429,261 @@ var _user$project$Main$viewFeelsNew = function (model) {
 			}
 		});
 };
+var _user$project$Main$IncrementIdeaVote = F2(
+	function (a, b) {
+		return {ctor: 'IncrementIdeaVote', _0: a, _1: b};
+	});
+var _user$project$Main$ExperienceFeel = function (a) {
+	return {ctor: 'ExperienceFeel', _0: a};
+};
+var _user$project$Main$viewFeelsShowHeader = function (feel) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('feel-show-header'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('feel-show-emoji-link'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href('#/'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$p,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('feel-show-emoji'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(feel.emoji),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$p,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('feel-show-name'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Feeling ',
+								A2(_elm_lang$core$Basics_ops['++'], feel.name, '?'))),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('feel-show-button'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$a,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('btn btn-info'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(
+											_user$project$Main$ExperienceFeel(feel)),
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('I have felt this.'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$DecrementIdeaVote = F2(
+	function (a, b) {
+		return {ctor: 'DecrementIdeaVote', _0: a, _1: b};
+	});
+var _user$project$Main$viewFeelsShowIdeaVoteCount = F2(
+	function (feel, idea) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('feels-show-idea-vote-count pull-left'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$span,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('vote-up btn btn-xs btn-success'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(
+								A2(_user$project$Main$IncrementIdeaVote, feel, idea)),
+							_1: {ctor: '[]'}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('+'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(idea.voteCount)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$span,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('vote-down btn btn-xs btn-danger'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(
+										A2(_user$project$Main$DecrementIdeaVote, feel, idea)),
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('-'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _user$project$Main$viewFeelsShowIdea = F2(
+	function (feel, idea) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('feels-show-idea'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(_user$project$Main$viewFeelsShowIdeaVoteCount, feel, idea),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$viewFeelsShowIdeaDescription(idea),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$Main$viewFeelsShowIdeas = function (feel) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('feels-show-ideas'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				A2(
+					_elm_lang$core$List$map,
+					_user$project$Main$viewFeelsShowIdea(feel),
+					feel.ideas)),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$viewFeelsShow = F2(
+	function (model, name) {
+		var maybeFeel = _elm_lang$core$List$head(
+			A2(
+				_elm_lang$core$List$filter,
+				function (f) {
+					return _elm_lang$core$Native_Utils.eq(
+						_elm_lang$core$String$toLower(f.name),
+						name);
+				},
+				model.feels));
+		var _p10 = maybeFeel;
+		if (_p10.ctor === 'Just') {
+			var _p11 = _p10._0;
+			return A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('feel-show container'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Main$viewFeelsShowHeader(_p11),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$viewFeelsShowIdeas(_p11),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$viewFeelsShowFooter(_p11),
+							_1: {ctor: '[]'}
+						}
+					}
+				});
+		} else {
+			return A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('alert alert-danger'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Feel not found!'),
+					_1: {ctor: '[]'}
+				});
+		}
+	});
 var _user$project$Main$view = function (model) {
-	var _p6 = model.currentPage;
-	switch (_p6.ctor) {
+	var _p12 = model.currentPage;
+	switch (_p12.ctor) {
 		case 'Home':
 			return _user$project$Main$viewHome(model);
 		case 'FeelsIndex':
@@ -14352,7 +14691,7 @@ var _user$project$Main$view = function (model) {
 		case 'FeelsNew':
 			return _user$project$Main$viewFeelsNew(model);
 		case 'FeelsShow':
-			return _user$project$Main$viewFeelsShow(_p6._0);
+			return A2(_user$project$Main$viewFeelsShow, model, _p12._0);
 		case 'UsersIndex':
 			return _user$project$Main$viewUsersIndex(model);
 		default:
@@ -14360,8 +14699,8 @@ var _user$project$Main$view = function (model) {
 	}
 };
 var _user$project$Main$pageView = function (model) {
-	var _p7 = model.currentPage;
-	switch (_p7.ctor) {
+	var _p13 = model.currentPage;
+	switch (_p13.ctor) {
 		case 'Home':
 			return _user$project$Main$viewHome(model);
 		case 'FeelsIndex':
@@ -14369,15 +14708,12 @@ var _user$project$Main$pageView = function (model) {
 		case 'FeelsNew':
 			return _user$project$Main$viewFeelsNew(model);
 		case 'FeelsShow':
-			return _user$project$Main$viewFeelsShow(_p7._0);
+			return A2(_user$project$Main$viewFeelsShow, model, _p13._0);
 		case 'UsersIndex':
 			return _user$project$Main$viewUsersIndex(model);
 		default:
 			return _user$project$Main$viewHome(model);
 	}
-};
-var _user$project$Main$ExperienceFeel = function (a) {
-	return {ctor: 'ExperienceFeel', _0: a};
 };
 var _user$project$Main$ChangePage = function (a) {
 	return {ctor: 'ChangePage', _0: a};
@@ -14398,7 +14734,7 @@ var _user$project$Main$NoOp = {ctor: 'NoOp'};
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Msg":{"args":[],"tags":{"InputFeelEmoji":["String"],"SaveFeel":["Main.Feel"],"ExperienceFeel":["Main.Feel"],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"InputFeelName":["String"],"NoOp":[]}},"Main.Page":{"args":[],"tags":{"UsersIndex":[],"Home":[],"FeelsNew":[],"NotFound":[],"FeelsIndex":[],"FeelsShow":["String"]}}},"aliases":{"Main.Idea":{"args":[],"type":"{ id : Int, description : String, voteCount : Int }"},"Main.Feel":{"args":[],"type":"{ id : Int , emoji : String , feltCount : Int , ideas : List Main.Idea , name : String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Msg":{"args":[],"tags":{"InputFeelEmoji":["String"],"SaveFeel":["Main.Feel"],"ExperienceFeel":["Main.Feel"],"Navigate":["Main.Page"],"ChangePage":["Main.Page"],"IncrementIdeaVote":["Main.Feel","Main.Idea"],"InputFeelName":["String"],"DecrementIdeaVote":["Main.Feel","Main.Idea"],"NoOp":[]}},"Main.Page":{"args":[],"tags":{"UsersIndex":[],"Home":[],"FeelsNew":[],"NotFound":[],"FeelsIndex":[],"FeelsShow":["String"]}}},"aliases":{"Main.Idea":{"args":[],"type":"{ id : Int, description : String, voteCount : Int }"},"Main.Feel":{"args":[],"type":"{ id : Int , emoji : String , feltCount : Int , ideas : List Main.Idea , name : String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
